@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
+// Production static export: prevents the dc-runtime editor/hot-reload path
+// (an unconditional self `fetch(location.href)` + full re-parse on every
+// boot) from running in production — see dc-runtime boot(): it only fires
+// when window.__resources is falsy. Left unset, this caused the page to
+// hang mid-render on this large exported document.
+window.__resources = {};
+</script>
+<script>
 // GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
 "use strict";
 (() => {
@@ -2144,7 +2152,6 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
             <p style="font: 400 15px/1.75 'Hanken Grotesk',sans-serif; color: #574143; margin: clamp(18px,2vw,26px) 0 0; text-wrap: pretty; width: 510px; hyphens: auto; -webkit-hyphens: auto; word-spacing: -0.01em">Orta Anadolu'da orta halli bir ailenin ikinci çocuğu olarak dünyaya geldim. Çocukluğum, aidiyet ve kimlik arayışının iç içe geçtiği duygusal olarak zengin bir dönemde geçti.<br><br>Bugün insan ilişkilerine ve aile dinamiklerine duyduğum ilginin temelleri o yıllarda atıldı. Ankara'da Fizik eğitimi aldıktan sonra İstanbul'da uzun yıllar bankacılık ve özel sektörde çalıştım. Ancak 45 yaşımda hayatımın yönünü kökten değiştirmeye karar verdim ve psikolojik danışmanlık alanına adım attım.<br><br>Bu değişim bana şunu öğretti: Hayatın hiçbir döneminde öğrenmek, değişmek ve yeniden başlamak için geç değildir. Bugün bu inançla, danışanlarımın kendileriyle, ilişkileriyle ve hayat yönleriyle ilgili yeni farkındalıklar kazanmalarına eşlik ediyorum.</p>
             
             <ul style="list-style:none; display:flex; flex-wrap:wrap; gap:8px; margin:clamp(22px,2.6vw,32px) 0 0; padding:0">
-              <li style="border:1px solid #EFD5DC; border-radius:3px; padding:9px 13px; font:400 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62">Lisans: Psikoloji</li>
               <li style="border:1px solid #EFD5DC; border-radius:3px; padding:9px 13px; font:400 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62">Uzmanlık: Aile &amp; Çift Danışmanlığı</li>
               <li style="border:1px solid #EFD5DC; border-radius:3px; padding:9px 13px; font:400 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62">Gottman Çift Terapisi Eğitimi</li>
               <li style="border:1px solid #EFD5DC; border-radius:3px; padding:9px 13px; font:400 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62">Şema Terapi Uygulayıcısı</li>
