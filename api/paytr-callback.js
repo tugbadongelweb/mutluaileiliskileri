@@ -4,7 +4,7 @@ import { getBookingRecord, updateBookingRecord, releaseCells } from '../lib/redi
 /**
  * PayTR'nin ödeme sonucu için sunucudan sunucuya çağırdığı bildirim (webhook)
  * adresi. PayTR panelinde "Bildirim URL" alanına bu fonksiyonun tam adresi
- * girilmelidir, örn: https://tugbadongel.com/api/paytr-callback
+ * girilmelidir, örn: https://mutluaileiliskileri.com/api/paytr-callback
  *
  * PayTR bu adrese POST eder; imza doğrulandıktan sonra yanıt olarak SADECE
  * "OK" metni dönülmelidir — aksi halde PayTR bildirimi tekrar dener.

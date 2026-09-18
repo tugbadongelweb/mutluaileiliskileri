@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tugbadongel.com/sitemap.xml
+Sitemap: https://mutluaileiliskileri.com/sitemap.xml
