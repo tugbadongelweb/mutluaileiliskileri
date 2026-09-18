@@ -1,5 +1,5 @@
 import { verifyPaytrCallback } from '../lib/paytr.js';
-import { getBookingRecord, updateBookingRecord, releaseCells } from '../lib/redis.js';
+import { getBookingRecord, updateBookingRecord, releaseCells, confirmCells } from '../lib/redis.js';
 
 /**
  * PayTR'nin ödeme sonucu için sunucudan sunucuya çağırdığı bildirim (webhook)
@@ -37,6 +37,7 @@ export default async function handler(req, res) {
     if (record && record.status === 'odeme_bekleniyor') {
       if (status === 'success') {
         await updateBookingRecord(id, { status: 'odendi', paidAt: new Date().toISOString() });
+        await confirmCells(record.date, record.cells);
       } else {
         await updateBookingRecord(id, { status: 'odeme_basarisiz' });
         await releaseCells(record.date, record.cells);
