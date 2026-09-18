@@ -2703,7 +2703,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
                   <button type="button" onClick="{{ t.go }}" style="display:flex; align-items:center; justify-content:space-between; gap:14px; text-align:left; font:inherit; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; padding:16px 18px; cursor:pointer; transition:border-color 300ms ease" style-hover="border-color:#7D112E">
                     <span>
                       <span style="display:block; font:600 15px/1.3 'Hanken Grotesk',sans-serif; color:#4B2330">{{ t.label }}</span>
-                      <span style="display:block; font:400 13px/1.5 'Hanken Grotesk',sans-serif; color:#6D5E62; margin-top:3px">{{ t.minutes }} dakika</span>
+                      <span style="display:block; font:400 13px/1.5 'Hanken Grotesk',sans-serif; color:#6D5E62; margin-top:3px">{{ t.sub }}</span>
                     </span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7D112E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12h13"></path><path d="M12.5 6 18.5 12l-6 6"></path></svg>
                   </button>
@@ -2794,7 +2794,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
             <sc-if value="{{ bIsStep4 }}" hint-placeholder-val="{{ false }}">
               <div style="animation:fade 300ms ease both">
                 <h2 style="font:400 clamp(24px,2.6vw,32px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Randevunuz alındı.</h2>
-                <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0">{{ selectedTypeLabel }} · {{ selectedDateLabel }} · {{ bTime }} için yeriniz ayrıldı. Online ödeme sistemi yakında aktif olacak; görüşme detayları ve ödeme bilgisi için sizinle e-posta veya WhatsApp üzerinden iletişime geçilecektir.</p>
+                <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0">{{ selectedTypeLabel }} · {{ selectedDateLabel }} · {{ bTime }} için yeriniz ayrıldı. Görüşme detayları ve ödeme bilgisi için sizinle e-posta üzerinden iletişime geçilecektir.</p>
                 <button type="button" onClick="{{ resetBooking }}" style="font:600 14.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:none; border:1px solid #EFD5DC; padding:15px 26px; border-radius:8px; margin-top:26px; cursor:pointer">Yeni randevu</button>
               </div>
             </sc-if>
@@ -3165,9 +3165,10 @@ class Component extends DCLogic {
   WORK_HOURS = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 
   BOOKING_TYPES = [
-    { key: 'bireysel', label: 'Bireysel Danışmanlık', minutes: 60, cells: 1, price: '[Fiyat — CLIENT TO CONFIRM]' },
-    { key: 'cift', label: 'Çift Danışmanlığı', minutes: 90, cells: 2, price: '[Fiyat — CLIENT TO CONFIRM]' },
-    { key: 'aile', label: 'Aile Danışmanlığı', minutes: 90, cells: 2, price: '[Fiyat — CLIENT TO CONFIRM]' }
+    { key: 'bireysel', label: 'Bireysel Danışmanlık', minutes: 60, cells: 1 },
+    { key: 'bireysel_paket', label: 'Bireysel Danışmanlık — Aylık Paket', minutes: 60, cells: 1, note: '4 seanslık paket, haftada 1 · bu randevuyla ilk seans planlanır' },
+    { key: 'cift', label: 'Çift Danışmanlığı', minutes: 90, cells: 2 },
+    { key: 'cift_paket', label: 'Çift Danışmanlığı — Aylık Paket', minutes: 90, cells: 2, note: '4 seanslık paket, haftada 1 · bu randevuyla ilk seans planlanır' }
   ];
 
   SITE = {
@@ -3538,7 +3539,8 @@ class Component extends DCLogic {
       selectedTypeLabel: (this.BOOKING_TYPES.find(t => t.key === st.bType) || {}).label || '',
       selectedDateLabel: st.bDate ? new Date(st.bDate + 'T00:00:00').toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' }) : '',
       sessionTypes: this.BOOKING_TYPES.map(t => ({
-        key: t.key, label: t.label, minutes: t.minutes, price: t.price,
+        key: t.key, label: t.label, minutes: t.minutes,
+        sub: t.minutes + ' dakika' + (t.note ? ' · ' + t.note : ''),
         go: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bType: t.key, bStep: 2, bDate: '', bTime: '', bSlots: null, bError: '', bCalMonth: 0 }); }
       })),
       bCalMonthLabel: (() => {
