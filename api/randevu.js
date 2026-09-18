@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   }
   body = body || {};
 
-  const { date, time, sessionType, name, email, phone, kvkkOnay } = body;
+  const { date, time, sessionType, name, email, phone, kvkkOnay, onamOnay } = body;
 
   if (!SESSION_TYPES[sessionType]) {
     res.status(400).json({ ok: false, error: 'invalid_session_type' });
@@ -68,6 +68,10 @@ export default async function handler(req, res) {
     res.status(400).json({ ok: false, error: 'kvkk_required' });
     return;
   }
+  if (!onamOnay) {
+    res.status(400).json({ ok: false, error: 'onam_required' });
+    return;
+  }
 
   const id = crypto.randomUUID().replace(/-/g, ''); // PayTR merchant_oid ile birebir aynı, tire yok
   let reserved = false;
@@ -90,6 +94,8 @@ export default async function handler(req, res) {
       name: String(name).trim(),
       email: String(email).trim(),
       phone: phone ? String(phone).trim() : '',
+      kvkkOnay: true,
+      onamOnay: true,
       status: 'odeme_bekleniyor',
       createdAt: new Date().toISOString(),
     };

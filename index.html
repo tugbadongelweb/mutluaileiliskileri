@@ -2792,6 +2792,10 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
                   <input type="checkbox" checked="{{ bKvkk }}" onChange="{{ toggleBKvkk }}" style="margin-top:4px; width:18px; height:18px; accent-color:#7D112E; flex:none">
                   <span>Kişisel verilerimin <a href="#" onClick="{{ goKvkk }}">KVKK Aydınlatma Metni</a> kapsamında işlenmesini onaylıyorum.</span>
                 </label>
+                <label style="display:flex; gap:12px; align-items:flex-start; font:400 14.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62">
+                  <input type="checkbox" checked="{{ bOnam }}" onChange="{{ toggleBOnam }}" style="margin-top:4px; width:18px; height:18px; accent-color:#7D112E; flex:none">
+                  <span><a href="#" onClick="{{ goOnam }}">Bilgilendirilmiş Onam Formu</a>'nu okudum, anladım ve kabul ediyorum.</span>
+                </label>
                 <sc-if value="{{ bHasError }}" hint-placeholder-val="{{ false }}">
                   <p style="font:500 14px/1.5 'Hanken Grotesk',sans-serif; color:#B3261E; margin:0">{{ bError }}</p>
                 </sc-if>
@@ -2827,7 +2831,20 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
             <li style="font:400 16.5px/1.7 'Hanken Grotesk',sans-serif; color:#4B2330; padding:16px 0; border-bottom:1px solid #EFD5DC">{{ i }}</li>
           </sc-for>
         </ul>
-        <p style="font:400 14px/1.7 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:24px 0 0">Bu sayfanın nihai metni, hukuki danışman onayıyla eklenecektir. [Yasal metinler — CLIENT TO CONFIRM]</p>
+        <sc-for list="{{ legal.sections }}" as="sec" hint-placeholder-count="0">
+          <h2 style="font:400 clamp(19px,2vw,24px)/1.3 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:36px 0 0">{{ sec.heading }}</h2>
+          <ul style="list-style:none; margin:14px 0 0; padding:0; border-top:1px solid #EFD5DC">
+            <sc-for list="{{ sec.items }}" as="i" hint-placeholder-count="4">
+              <li style="font:400 16.5px/1.7 'Hanken Grotesk',sans-serif; color:#4B2330; padding:16px 0; border-bottom:1px solid #EFD5DC">{{ i }}</li>
+            </sc-for>
+          </ul>
+        </sc-for>
+        <sc-if value="{{ legal.hasClosing }}" hint-placeholder-val="{{ false }}">
+          <p style="font:400 15.5px/1.8 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:32px 0 0; padding:20px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px">{{ legal.closing }}</p>
+        </sc-if>
+        <sc-if value="{{ legal.showDraftNote }}" hint-placeholder-val="{{ true }}">
+          <p style="font:400 14px/1.7 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:24px 0 0">Bu sayfanın nihai metni, hukuki danışman onayıyla eklenecektir. [Yasal metinler — CLIENT TO CONFIRM]</p>
+        </sc-if>
       </div>
     </section>
   </main>
@@ -2877,6 +2894,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
           <a href="#" onClick="{{ goKvkk }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">KVKK Aydınlatma Metni</a>
           <a href="#" onClick="{{ goPrivacy }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Gizlilik Politikası</a>
           <a href="#" onClick="{{ goCookies }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Çerez Politikası</a>
+          <a href="#" onClick="{{ goOnam }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Bilgilendirilmiş Onam Formu</a>
         </nav>
       </div>
       <sc-if value="{{ showStickyCta }}" hint-placeholder-val="{{ false }}">
@@ -2897,7 +2915,7 @@ class Component extends DCLogic {
   BOOKING_ENABLED = true;
 
   state = { page: 'home', svc: 0, art: 0, legal: 'kvkk', menu: false, faq: null, faqAll: false, cat: 'Tümü', sent: false, vw: 1440, scrolled: false, picks: [], msg: '', tur: 'Emin değilim',
-    bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bSlots: null, bLoadingSlots: false, bSubmitting: false, bError: '', bResult: null, bCalMonth: 0 };
+    bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bOnam: false, bSlots: null, bLoadingSlots: false, bSubmitting: false, bError: '', bResult: null, bCalMonth: 0 };
 
   ICONS = {
     heart: ['M12 20s-7-4.35-7-9.5A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19 10.5c0 5.15-7 9.5-7 9.5z'],
@@ -3166,7 +3184,35 @@ class Component extends DCLogic {
   LEGAL = {
     kvkk: { title: 'KVKK Aydınlatma Metni', intro: '6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında, web sitesi üzerinden iletilen bilgilerin hangi amaçla işlendiğini ve nasıl saklandığını bu sayfada açıklıyoruz.', items: ['Veri sorumlusu bilgileri — [CLIENT TO CONFIRM]', 'İşlenen veri kategorileri: ad soyad, e-posta, telefon, mesaj içeriği', 'İşleme amacı: randevu taleplerinin değerlendirilmesi ve iletişim', 'Saklama süresi ve ilgili kişi hakları — [CLIENT TO CONFIRM]'] },
     privacy: { title: 'Gizlilik Politikası', intro: 'Bu politika, web sitesi üzerinden toplanan bilgilerin nasıl kullanıldığını açıklar. Görüşmelerde paylaşılan bilgiler meslek etiği çerçevesinde ayrıca korunur.', items: ['Form üzerinden toplanan bilgiler ve kullanım amacı', 'Üçüncü taraf hizmet sağlayıcıları — [CLIENT TO CONFIRM]', 'Veri güvenliği önlemleri', 'Talep ve başvuru yolları'] },
-    cookies: { title: 'Çerez Politikası', intro: 'Web sitesinde deneyimi geliştirmek ve trafik istatistiklerini ölçmek için çerezler kullanılabilir.', items: ['Zorunlu çerezler', 'Analitik çerezler — [Kullanılan analitik araç: CLIENT TO CONFIRM]', 'Çerez tercihlerinin yönetimi', 'Saklama süreleri'] }
+    cookies: { title: 'Çerez Politikası', intro: 'Web sitesinde deneyimi geliştirmek ve trafik istatistiklerini ölçmek için çerezler kullanılabilir.', items: ['Zorunlu çerezler', 'Analitik çerezler — [Kullanılan analitik araç: CLIENT TO CONFIRM]', 'Çerez tercihlerinin yönetimi', 'Saklama süreleri'] },
+    onam: {
+      title: 'Bilgilendirilmiş Onam Formu',
+      intro: 'Aile danışmanlığı sürecinde sahip olduğunuz haklarınız ve sorumluluklarınız vardır. Bu form, süreçle ilgili sizi bilgilendirmek amacıyla hazırlanmıştır ve karşılıklı bir anlaşma niteliği taşır. Randevu almadan önce lütfen dikkatlice okuyunuz.',
+      items: [],
+      sections: [
+        { heading: 'Sürece İlişkin Bilgiler', items: [
+          'Çift katılımlı oturumlar 90 dakika, bireysel oturumlar 60 dakika sürer.',
+          'Oturumlar her hafta belirlenen gün ve saatte gerçekleşir; sürecin toplam uzunluğu danışanın ihtiyacına göre belirlenir.',
+          'Oturumlar sırasında cep telefonu ve diğer haberleşme cihazları sessizde olmalıdır.'
+        ] },
+        { heading: 'Uzmana Ait Sorumluluklar', items: [
+          'Seans esnasında elde edilen bilgi ve belgelerin gizliliği uzman tarafından sağlanır ve kişisel dosyalarda gizlilikle saklanır.',
+          'Danışmanlık ilişkisi sona erdiğinde de gizlilik ilkesine sadık kalınır; ancak kişinin kendisine veya üçüncü kişilere ciddi bir zarar verme riski, suç teşkil eden bir durum ya da mahkeme celbi gibi istisnai hallerde gizliliğin sınırları bulunur.',
+          'Uzmanın alanını aşan durumlarda ek destek talep edilebilir ya da danışan en uygun kuruma yönlendirilir.',
+          'Mazeret bildirmeden oturumlara gelinmemesi durumunda uzman seans sürecine son verme hakkına sahiptir.'
+        ] },
+        { heading: 'Danışana Ait Hak ve Sorumluluklar', items: [
+          'Süreçte gönüllülük esastır; istediğiniz zaman yardım almaktan vazgeçme hakkınız bulunur.',
+          'Sürecin yararlı olması için oturumlara düzenli katılım ve süreci tamamlamak önemlidir.',
+          'Randevu saatinde hazır olunmalıdır; görüşme başladıktan sonraki ilk 15 dakika içinde katılım sağlanabilir, sonrasında yeni randevu için uzmanla iletişime geçilmesi gerekir.',
+          'Uzman kendi elinde olmayan bir nedenle geç kalırsa görüşme süresi tamamlanacak şekilde uzatılır; danışanın geç kalması durumunda seans normal bitiş saatinde sona erer.',
+          'Katılıma engel bir durum olduğunda en az 24 saat önceden e-posta ile bilgi verilmesi gerekir; mazeretsiz katılınmayan oturumlar sürecin sonlanması anlamına gelebilir.',
+          'İletişim bilgilerinde değişiklik olduğunda uzmana bildirilmelidir.',
+          'Her seans ücretlendirilir ve ödeme seans öncesinde gerçekleşir.'
+        ] }
+      ],
+      closing: '6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında özel nitelikli kişisel veriler dahil olmak üzere kişisel verilerimin işlenmesi, ilgili süreç kapsamında sınırlı kullanılması, paylaşılması ve gereken süre saklanması konusunda tarafıma gerekli aydınlatmanın yapıldığını; hiçbir baskı altında kalmadan özgür irademle açık rızamın bulunduğunu, işbu formu okuduğumu ve anladığımı kabul ediyorum.'
+    }
   };
 
   TRUST = ['Aile & Çift Danışmanlığı', 'Bireysel Danışmanlık (21+)', 'Online görüşme'];
@@ -3247,7 +3293,7 @@ class Component extends DCLogic {
       const a = this.ARTICLES[st.art] || this.ARTICLES[0];
       m = { path: '/yazilar/' + a.slug, title: a.seoTitle || (a.title + ' | Tuğba Döngel'), desc: a.excerpt };
     } else if (st.page === 'legal') {
-      const paths = { kvkk: '/kvkk', privacy: '/gizlilik-politikasi', cookies: '/cerez-politikasi' };
+      const paths = { kvkk: '/kvkk', privacy: '/gizlilik-politikasi', cookies: '/cerez-politikasi', onam: '/bilgilendirilmis-onam' };
       const l = this.LEGAL[st.legal];
       m = { path: paths[st.legal], title: l.title + ' | Tuğba Döngel', desc: l.intro };
     }
@@ -3300,7 +3346,8 @@ class Component extends DCLogic {
       '/iletisim': { page: 'contact' },
       '/kvkk': { page: 'legal', legal: 'kvkk' },
       '/gizlilik-politikasi': { page: 'legal', legal: 'privacy' },
-      '/cerez-politikasi': { page: 'legal', legal: 'cookies' }
+      '/cerez-politikasi': { page: 'legal', legal: 'cookies' },
+      '/bilgilendirilmis-onam': { page: 'legal', legal: 'onam' }
     };
     if (routes[path]) return Object.assign({ menu: false }, routes[path]);
     const svcIdx = this.SERVICES.findIndex((sv) => '/' + sv.slug === path);
@@ -3317,7 +3364,7 @@ class Component extends DCLogic {
     if (this.META[st.page]) return this.META[st.page].path;
     if (st.page === 'service') { const sv = this.SERVICES[st.svc] || this.SERVICES[0]; return '/' + sv.slug; }
     if (st.page === 'article') { const ar = this.ARTICLES[st.art] || this.ARTICLES[0]; return '/yazilar/' + ar.slug; }
-    if (st.page === 'legal') { const paths = { kvkk: '/kvkk', privacy: '/gizlilik-politikasi', cookies: '/cerez-politikasi' }; return paths[st.legal]; }
+    if (st.page === 'legal') { const paths = { kvkk: '/kvkk', privacy: '/gizlilik-politikasi', cookies: '/cerez-politikasi', onam: '/bilgilendirilmis-onam' }; return paths[st.legal]; }
     return null;
   }
 
@@ -3363,6 +3410,7 @@ class Component extends DCLogic {
   async submitBooking() {
     const st = this.state;
     if (!st.bKvkk) { this.setState({ bError: 'Devam etmek için KVKK metnini onaylamanız gerekiyor.' }); return; }
+    if (!st.bOnam) { this.setState({ bError: 'Devam etmek için Bilgilendirilmiş Onam Formu\'nu onaylamanız gerekiyor.' }); return; }
     if (!st.bName || st.bName.trim().length < 2) { this.setState({ bError: 'Lütfen adınızı ve soyadınızı yazın.' }); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.bEmail || '')) { this.setState({ bError: 'Lütfen geçerli bir e-posta adresi yazın.' }); return; }
     this.setState({ bSubmitting: true, bError: '' });
@@ -3370,7 +3418,7 @@ class Component extends DCLogic {
       const res = await fetch('/api/randevu', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: st.bDate, time: st.bTime, sessionType: st.bType, name: st.bName, email: st.bEmail, phone: st.bPhone, kvkkOnay: st.bKvkk })
+        body: JSON.stringify({ date: st.bDate, time: st.bTime, sessionType: st.bType, name: st.bName, email: st.bEmail, phone: st.bPhone, kvkkOnay: st.bKvkk, onamOnay: st.bOnam })
       });
       const data = await res.json();
       if (!data.ok) {
@@ -3461,6 +3509,7 @@ class Component extends DCLogic {
       goKvkk: this.go('legal', { legal: 'kvkk' }),
       goPrivacy: this.go('legal', { legal: 'privacy' }),
       goCookies: this.go('legal', { legal: 'cookies' }),
+      goOnam: this.go('legal', { legal: 'onam' }),
 
       navItems: pages.map(p => { const cur = st.page === p.page || (st.page === 'service' && p.page === 'services') || (st.page === 'article' && p.page === 'writings'); return { label: p.label, go: this.go(p.page), active: cur, inactive: !cur }; }),
       trust: this.TRUST.map((t, i) => ({ label: t, sep: i < this.TRUST.length - 1 })),
@@ -3536,7 +3585,10 @@ class Component extends DCLogic {
       art: articles[st.art] || articles[0],
       notes: this.NOTES,
       cats: cats.map(c => ({ label: c, active: st.cat === c, inactive: st.cat !== c, go: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ cat: c }); } })),
-      legal: this.LEGAL[st.legal] || this.LEGAL.kvkk,
+      legal: Object.assign({}, this.LEGAL[st.legal] || this.LEGAL.kvkk, {
+        hasClosing: !!(this.LEGAL[st.legal] || this.LEGAL.kvkk).closing,
+        showDraftNote: st.legal !== 'onam'
+      }),
       site: this.SITE,
       contactRows: [
         { label: 'E-posta', value: this.SITE.email },
@@ -3554,6 +3606,7 @@ class Component extends DCLogic {
       bEmail: st.bEmail,
       bPhone: st.bPhone,
       bKvkk: st.bKvkk,
+      bOnam: st.bOnam,
       bTime: st.bTime,
       bSubmitting: st.bSubmitting,
       bLoadingSlots: st.bLoadingSlots,
@@ -3626,8 +3679,9 @@ class Component extends DCLogic {
       setBEmail: (e) => this.setState({ bEmail: e.target.value }),
       setBPhone: (e) => this.setState({ bPhone: e.target.value }),
       toggleBKvkk: (e) => this.setState({ bKvkk: e.target.checked }),
+      toggleBOnam: (e) => this.setState({ bOnam: e.target.checked }),
       submitBooking: (e) => { if (e && e.preventDefault) e.preventDefault(); this.submitBooking(); },
-      resetBooking: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bSlots: null, bError: '', bResult: null, bCalMonth: 0 }); }
+      resetBooking: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bOnam: false, bSlots: null, bError: '', bResult: null, bCalMonth: 0 }); }
     };
   }
 }
