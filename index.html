@@ -3489,8 +3489,8 @@ class Component extends DCLogic {
       education: [
         { label: 'Ankara Üniversitesi', value: 'Fizik (Lisans)' },
         { label: 'Gazi Üniversitesi', value: 'Eğitim Bilimleri' },
-        { label: 'İstanbul Üniversitesi (AUZEF)', value: 'Sosyoloji' },
-        { label: 'İstanbul Üniversitesi (AUZEF)', value: 'Sosyal Hizmet' }
+        { label: 'İstanbul Üniversitesi', value: 'Sosyoloji' },
+        { label: 'İstanbul Üniversitesi', value: 'Sosyal Hizmet' }
       ],
       faqs: this.FAQ.map((f, i) => ({ q: f.q, a: f.a, open: st.faq === i, closed: st.faq !== i, toggle: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ faq: st.faq === i ? null : i }); } })),
       homeFaqs: (st.faqAll ? this.FAQ : this.FAQ.slice(0, 5)).map((f) => {
