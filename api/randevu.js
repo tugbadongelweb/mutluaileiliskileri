@@ -78,13 +78,8 @@ export default async function handler(req, res) {
       createdAt: new Date().toISOString(),
     };
 
-    if (isPaytrConfigured()) {
-      const price = priceForSessionType(sessionType);
-      if (!price) {
-        await releaseCells(date, cells);
-        res.status(503).json({ ok: false, error: 'price_not_configured' });
-        return;
-      }
+    const price = isPaytrConfigured() ? priceForSessionType(sessionType) : null;
+    if (price) {
       const origin = `https://${req.headers.host}`;
       try {
         const paymentUrl = await createPaytrPaymentUrl({
