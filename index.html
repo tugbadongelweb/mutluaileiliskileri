@@ -3502,7 +3502,7 @@ class Component extends DCLogic {
       }),
       faqToggleLabel: st.faqAll ? 'Daha az göster' : 'Tüm sorular',
       toggleAllFaq: (ev) => { if (ev && ev.preventDefault) ev.preventDefault(); this.setState({ faqAll: !st.faqAll }); },
-      homeArticles: articles.slice(0, 3),
+      articles: articles,
       visibleArticles: st.cat === 'Tümü' ? articles : articles.filter(a => a.cat === st.cat),
       relatedArticles: articles.filter((a, i) => i !== st.art).slice(0, 3),
       art: articles[st.art] || articles[0],
