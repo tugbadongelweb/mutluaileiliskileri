@@ -2198,12 +2198,12 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
           <li style="display:flex; flex-direction:column; align-items:flex-start; margin-top:-22px; padding-right:clamp(10px,1.4vw,22px)">
             <span style="display:grid; place-items:center; width:44px; height:44px; flex:none; background:#F7D3D9; border:4px solid #FEF9F2; border-radius:50%; font:600 13px/1 'Hanken Grotesk',sans-serif; color:#59001B">01</span>
             <h3 style="font: 600 16px/1.35 'Hanken Grotesk',sans-serif; letter-spacing: 0.005em; color: #2A5A55; margin: 20px 0 0">İlk Temas</h3>
-            <p style="font:400 13.5px/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:11px 0 0; text-wrap:pretty">İletişim formu veya WhatsApp üzerinden seans talebinizi ve uygun olduğunuz zaman dilimlerini iletin.</p>
+            <p style="font:400 13.5px/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:11px 0 0; text-wrap:pretty">Randevu sayfasından uygun gün ve saati seçerek seans talebinizi oluşturun.</p>
           </li>
           <li style="display:flex; flex-direction:column; align-items:flex-start; margin-top:-22px; padding-right:clamp(10px,1.4vw,22px)">
             <span style="display:grid; place-items:center; width:44px; height:44px; flex:none; background:#F7D3D9; border:4px solid #FEF9F2; border-radius:50%; font:600 13px/1 'Hanken Grotesk',sans-serif; color:#59001B">02</span>
             <h3 style="font: 600 16px/1.35 'Hanken Grotesk',sans-serif; letter-spacing: 0.005em; color: #2A5A55; margin: 20px 0 0">Ön Tanışma</h3>
-            <p style="font:400 13.5px/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:11px 0 0; text-wrap:pretty">İhtiyaçlarınızı ve beklentilerinizi konuşacağımız 15 dakikalık kısa bir telefon değerlendirmesi gerçekleştirilir.</p>
+            <p style="font:400 13.5px/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:11px 0 0; text-wrap:pretty">İhtiyaçlarınızı ve beklentilerinizi konuşacağımız 15 dakikalık kısa bir ön değerlendirme görüşmesi gerçekleştirilir.</p>
           </li>
           <li style="display:flex; flex-direction:column; align-items:flex-start; margin-top:-22px; padding-right:clamp(10px,1.4vw,22px)">
             <span style="display:grid; place-items:center; width:44px; height:44px; flex:none; background:#F7D3D9; border:4px solid #FEF9F2; border-radius:50%; font:600 13px/1 'Hanken Grotesk',sans-serif; color:#59001B">03</span>
@@ -2951,7 +2951,7 @@ class Component extends DCLogic {
   ];
 
   PROCESS = [
-    { num: '01', title: 'İlk temas', text: 'İletişim formu, telefon veya WhatsApp üzerinden ulaşıyorsunuz. Kısa bir mesaj yeterli; her şeyi baştan anlatmanız gerekmiyor.', note: 'Dönüş yöntemi ve süresi: [CLIENT TO CONFIRM]' },
+    { num: '01', title: 'İlk temas', text: 'Randevu sayfasından uygun gün ve saati seçerek görüşme talebinizi oluşturuyorsunuz. Kısa bilgiler yeterli; her şeyi baştan anlatmanız gerekmiyor.', note: 'Dönüş yöntemi ve süresi: [CLIENT TO CONFIRM]' },
     { num: '02', title: 'Ön görüşme', text: 'İhtiyacınızı ve hangi görüşme biçiminin (bireysel, çift, aile) uygun olduğunu birlikte değerlendiriyoruz.', note: 'Ön görüşme süresi ve koşulları: [CLIENT TO CONFIRM]' },
     { num: '03', title: 'İlk seans', text: 'İlişkinin bugünkü hali, sizi başvurmaya yönlendiren durum ve geçmişte denediğiniz yollar konuşulur. Bu görüşmede bir karar vermeniz gerekmez.', note: 'Seans süresi: [CLIENT TO CONFIRM]' },
     { num: '04', title: 'Hedeflerin belirlenmesi', text: 'Neyi anlamak, neyi değiştirmek istediğinizi netleştiriyoruz. Süreç bu çerçeve üzerinden ilerler.', note: '' },
@@ -2982,7 +2982,7 @@ class Component extends DCLogic {
     { q: 'Danışmanlığa başlamadan önce hazırlık yapmam gerekir mi?', a: 'Hayır, özel bir hazırlık yapmanıza gerek yok. Sürece açık olmanız ve yaşadıklarınızı paylaşmaya istekli olmanız yeterlidir; geri kalanını birlikte şekillendiriyoruz.' },
     { q: 'Görüşmeler gizli mi?', a: 'Görüşmelerde paylaşılanlar meslek etiği ve ilgili mevzuat çerçevesinde gizli tutulur. Gizliliğin kapsamı ve istisnaları ilk görüşmede açıkça anlatılır. [Gizlilik metni — CLIENT TO CONFIRM]' },
     { q: 'Kaç seansta tedavi biter?', a: 'Her birey ve her sorun için farklılık gösterir. Bazı konular birkaç görüşmede netleşir, uzun süredir yerleşmiş örüntüler daha fazla zaman ister. Belirli bir seans sayısı ya da sonuç garantisi vermiyorum.' },
-    { q: 'Randevuyu nasıl oluşturabilirim?', a: 'İletişim formunu doldurabilir, telefonla arayabilir ya da WhatsApp üzerinden yazabilirsiniz. [Randevu yöntemi — CLIENT TO CONFIRM]' }
+    { q: 'Randevuyu nasıl oluşturabilirim?', a: 'İletişim sayfasındaki randevu bölümünden görüşme türünü ve size uygun gün/saati seçerek randevunuzu oluşturabilirsiniz.' }
   ];
 
   ARTICLES = [
@@ -3170,8 +3170,6 @@ class Component extends DCLogic {
     wordmark: 'Tuğba Döngel',
     descriptor: 'Aile Danışmanlığı',
     professionalTitle: 'Aile Danışmanı',
-    phone: '[Telefon — CLIENT TO CONFIRM]',
-    whatsapp: '[WhatsApp numarası — CLIENT TO CONFIRM]',
     email: 'tugba.dongelercan@mutluaileiliskileri.com',
     address: '[Ofis adresi — CLIENT TO CONFIRM]',
     hours: '[Çalışma saatleri — CLIENT TO CONFIRM]',
@@ -3189,7 +3187,7 @@ class Component extends DCLogic {
     services: { path: '/calisma-alanlari', title: 'Çalışma Alanları | Aile, Çift ve Bireysel Danışmanlık', desc: 'Aile ve çift danışmanlığı ile 21 yaş üstü bireysel danışmanlık hizmetleri. Görüşmeler online.' },
     process: { path: '/surec', title: 'Danışmanlık Süreci | Tuğba Döngel', desc: 'İlk temastan ilk seansa ve sürecin ilerleyişine kadar danışmanlık sürecinin adım adım işleyişi.' },
     writings: { path: '/yazilar', title: 'Yazılar | İlişkiler, İletişim ve Aile Yaşamı', desc: 'İlişkiler, iletişim, evlilik öncesi ve sınırlar üzerine aile danışmanı Tuğba Döngel\u0027ın yazıları.' },
-    contact: { path: '/iletisim', title: 'İletişim | Aile Danışmanı Tuğba Döngel — Online Görüşme', desc: 'Görüşme planlamak veya soru sormak için iletişim formu, telefon ve WhatsApp bilgileri.' }
+    contact: { path: '/iletisim', title: 'İletişim | Aile Danışmanı Tuğba Döngel — Online Görüşme', desc: 'Randevu planlamak veya soru sormak için randevu takvimi ve e-posta bilgileri.' }
   };
 
   componentDidMount() {
@@ -3357,7 +3355,7 @@ class Component extends DCLogic {
       if (data.paymentUrl) { window.location.href = data.paymentUrl; return; }
       this.setState({ bSubmitting: false, bStep: 4, bResult: data });
     } catch (e) {
-      this.setState({ bSubmitting: false, bError: 'Randevu oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin veya WhatsApp üzerinden ulaşın.' });
+      this.setState({ bSubmitting: false, bError: 'Randevu oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin veya e-posta üzerinden ulaşın.' });
     }
   }
 
