@@ -2684,7 +2684,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
         <h1 style="font:400 clamp(34px,5vw,58px)/1.1 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; letter-spacing:-0.015em; text-align:center; margin:22px auto 0; max-width:20ch; text-wrap:pretty">Randevunuzu birlikte planlayalım.</h1>
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(32px,5vw,72px); margin-top:clamp(36px,5vw,64px); align-items:start">
           <div>
-            <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0; max-width:44ch">Görüşme türünü ve size uygun saati seçin; ödeme adımından sonra randevunuz kesinleşir. Sorularınız için WhatsApp veya e-posta üzerinden de ulaşabilirsiniz.</p>
+            <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0; max-width:44ch">Görüşme türünü ve size uygun saati seçin; ödeme adımından sonra randevunuz kesinleşir. Sorularınız için e-posta üzerinden de ulaşabilirsiniz.</p>
             <ul style="list-style:none; margin:32px 0 0; padding:0; border-top:1px solid #EFD5DC">
               <sc-for list="{{ contactRows }}" as="r" hint-placeholder-count="6">
                 <li style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; padding:16px 0; border-bottom:1px solid #EFD5DC">
@@ -2854,7 +2854,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
         </div>
         <div>
           <p style="font: 500 10.5px/1.4 'Hanken Grotesk',sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #2A5A55; margin: 0 0 18px">İletişim</p>
-          <p style="font:400 14px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">{{ site.phone }}<br>{{ site.email }}</p>
+          <p style="font:400 14px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">{{ site.email }}</p>
           <sc-if value="{{ showInstagram }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:18px">
               <a href="https://www.instagram.com/ailedanismanitugbadongel/" target="_blank" rel="noopener" style="font:500 13px/1 'Hanken Grotesk',sans-serif; color:#7D112E">Instagram</a>
@@ -3179,7 +3179,7 @@ class Component extends DCLogic {
     professionalTitle: 'Aile Danışmanı',
     phone: '[Telefon — CLIENT TO CONFIRM]',
     whatsapp: '[WhatsApp numarası — CLIENT TO CONFIRM]',
-    email: '[E-posta — CLIENT TO CONFIRM]',
+    email: 'tugba.dongelercan@mutluaileiliskileri.com',
     address: '[Ofis adresi — CLIENT TO CONFIRM]',
     hours: '[Çalışma saatleri — CLIENT TO CONFIRM]',
     instagram: 'https://www.instagram.com/ailedanismanitugbadongel/',
@@ -3521,8 +3521,6 @@ class Component extends DCLogic {
       legal: this.LEGAL[st.legal] || this.LEGAL.kvkk,
       site: this.SITE,
       contactRows: [
-        { label: 'Telefon', value: this.SITE.phone },
-        { label: 'WhatsApp', value: this.SITE.whatsapp },
         { label: 'E-posta', value: this.SITE.email },
         { label: 'Görüşme biçimi', value: 'Yalnızca online · Dünyanın her yerinden' }
       ],
