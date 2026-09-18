@@ -2745,24 +2745,26 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
                   </sc-for>
                 </div>
               </div>
-              <sc-if value="{{ bLoadingSlots }}" hint-placeholder-val="{{ false }}">
-                <p style="font:400 14px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:18px 0 0">Müsaitlik kontrol ediliyor…</p>
-              </sc-if>
-              <sc-if value="{{ bShowSlots }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,76px),1fr)); gap:8px; margin-top:18px">
-                  <sc-for list="{{ bTimeList }}" as="s" hint-placeholder-count="8">
-                    <sc-if value="{{ s.available }}" hint-placeholder-val="{{ true }}">
-                      <button type="button" onClick="{{ s.go }}" style="font:500 13.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; padding:12px 0; cursor:pointer" style-hover="border-color:#7D112E; color:#7D112E">{{ s.time }}</button>
-                    </sc-if>
-                    <sc-if value="{{ s.unavailable }}" hint-placeholder-val="{{ false }}">
-                      <span style="font:500 13.5px/1 'Hanken Grotesk',sans-serif; color:#C7B7B0; background:#F4EDEB; border:1px solid #EFD5DC; border-radius:8px; padding:12px 0; text-align:center; text-decoration:line-through">{{ s.time }}</span>
-                    </sc-if>
-                  </sc-for>
-                </div>
-              </sc-if>
-              <sc-if value="{{ bHasError }}" hint-placeholder-val="{{ false }}">
-                <p style="font:500 14px/1.5 'Hanken Grotesk',sans-serif; color:#B3261E; margin:18px 0 0">{{ bError }}</p>
-              </sc-if>
+              <div id="bTimesAnchor" style="scroll-margin-top:24px">
+                <sc-if value="{{ bLoadingSlots }}" hint-placeholder-val="{{ false }}">
+                  <p style="font:400 14px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:18px 0 0">Müsaitlik kontrol ediliyor…</p>
+                </sc-if>
+                <sc-if value="{{ bShowSlots }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,76px),1fr)); gap:8px; margin-top:18px">
+                    <sc-for list="{{ bTimeList }}" as="s" hint-placeholder-count="8">
+                      <sc-if value="{{ s.available }}" hint-placeholder-val="{{ true }}">
+                        <button type="button" onClick="{{ s.go }}" style="font:500 13.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; padding:12px 0; cursor:pointer" style-hover="border-color:#7D112E; color:#7D112E">{{ s.time }}</button>
+                      </sc-if>
+                      <sc-if value="{{ s.unavailable }}" hint-placeholder-val="{{ false }}">
+                        <span style="font:500 13.5px/1 'Hanken Grotesk',sans-serif; color:#C7B7B0; background:#F4EDEB; border:1px solid #EFD5DC; border-radius:8px; padding:12px 0; text-align:center; text-decoration:line-through">{{ s.time }}</span>
+                      </sc-if>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bHasError }}" hint-placeholder-val="{{ false }}">
+                  <p style="font:500 14px/1.5 'Hanken Grotesk',sans-serif; color:#B3261E; margin:18px 0 0">{{ bError }}</p>
+                </sc-if>
+              </div>
             </sc-if>
 
             <sc-if value="{{ bIsStep3 }}" hint-placeholder-val="{{ false }}">
@@ -3327,6 +3329,12 @@ class Component extends DCLogic {
 
   async fetchSlots(dateStr) {
     this.setState({ bDate: dateStr, bTime: '', bSlots: null, bLoadingSlots: true, bError: '' });
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        const el = document.getElementById('bTimesAnchor');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 60);
+    }
     try {
       const res = await fetch('/api/musaitlik?date=' + encodeURIComponent(dateStr));
       const data = await res.json();
