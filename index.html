@@ -2689,6 +2689,12 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
 
           <div style="background:#FFFFFF; border-radius:12px; padding:clamp(28px,3vw,44px); box-shadow:0 10px 40px rgba(125,17,46,0.06)">
 
+            <sc-if value="{{ bookingClosed }}" hint-placeholder-val="{{ false }}">
+              <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Randevu Al</h2>
+              <p style="font:400 15px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0">Online randevu sistemi kısa süreliğine bakımda; ödeme altyapısı tamamlandığında yeniden açılacaktır. Bu süre zarfında e-posta üzerinden ulaşabilirsiniz.</p>
+              <a href="mailto:{{ site.email }}" style="display:inline-block; margin-top:22px; font:600 15px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; padding:16px 26px; border-radius:8px" style-hover="background:#4B2330">{{ site.email }}</a>
+            </sc-if>
+
             <sc-if value="{{ bIsStep1 }}" hint-placeholder-val="{{ true }}">
               <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Randevu Al</h2>
               <p style="font:400 15px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:10px 0 0">Önce görüşme türünü seçin.</p>
@@ -2879,6 +2885,10 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;professionalTitle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Aile Danışmanı&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İçerik&quot;},&quot;heroHeadline&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Bazen sorun sevgisizlik değil, birbirimizi duyamamaktır.&quot;,&quot;İlişkinize başka bir yerden bakmak mümkün.&quot;,&quot;Birbirinizi yeniden duymaya alan açın.&quot;,&quot;İlişkilerde daha dengeli bir alan mümkün.&quot;],&quot;default&quot;:&quot;İlişkilerde daha dengeli bir alan mümkün.&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İçerik&quot;},&quot;showInstagram&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Bölümler&quot;},&quot;stickyMobileCta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Bölümler&quot;}}">
 class Component extends DCLogic {
+  // Ödeme entegrasyonu (PayTR Pro API onayı) tamamlanana kadar randevu alımı
+  // geçici olarak kapalı. Onay gelince bunu true yapmak yeterli.
+  BOOKING_ENABLED = false;
+
   state = { page: 'home', svc: 0, art: 0, legal: 'kvkk', menu: false, faq: null, faqAll: false, cat: 'Tümü', sent: false, vw: 1440, scrolled: false, picks: [], msg: '', tur: 'Emin değilim',
     bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bSlots: null, bLoadingSlots: false, bSubmitting: false, bError: '', bResult: null, bCalMonth: 0 };
 
@@ -3510,10 +3520,12 @@ class Component extends DCLogic {
         { label: 'E-posta', value: this.SITE.email },
         { label: 'Görüşme biçimi', value: 'Yalnızca online · Dünyanın her yerinden' }
       ],
-      bIsStep1: st.bStep === 1,
-      bIsStep2: st.bStep === 2,
-      bIsStep3: st.bStep === 3,
-      bIsStep4: st.bStep === 4,
+      bookingOpen: this.BOOKING_ENABLED,
+      bookingClosed: !this.BOOKING_ENABLED,
+      bIsStep1: this.BOOKING_ENABLED && st.bStep === 1,
+      bIsStep2: this.BOOKING_ENABLED && st.bStep === 2,
+      bIsStep3: this.BOOKING_ENABLED && st.bStep === 3,
+      bIsStep4: this.BOOKING_ENABLED && st.bStep === 4,
       bName: st.bName,
       bEmail: st.bEmail,
       bPhone: st.bPhone,
