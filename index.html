@@ -2885,9 +2885,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;professionalTitle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Aile Danışmanı&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İçerik&quot;},&quot;heroHeadline&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Bazen sorun sevgisizlik değil, birbirimizi duyamamaktır.&quot;,&quot;İlişkinize başka bir yerden bakmak mümkün.&quot;,&quot;Birbirinizi yeniden duymaya alan açın.&quot;,&quot;İlişkilerde daha dengeli bir alan mümkün.&quot;],&quot;default&quot;:&quot;İlişkilerde daha dengeli bir alan mümkün.&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İçerik&quot;},&quot;showInstagram&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Bölümler&quot;},&quot;stickyMobileCta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Bölümler&quot;}}">
 class Component extends DCLogic {
-  // Ödeme entegrasyonu (PayTR Pro API onayı) tamamlanana kadar randevu alımı
-  // geçici olarak kapalı. Onay gelince bunu true yapmak yeterli.
-  BOOKING_ENABLED = false;
+  BOOKING_ENABLED = true;
 
   state = { page: 'home', svc: 0, art: 0, legal: 'kvkk', menu: false, faq: null, faqAll: false, cat: 'Tümü', sent: false, vw: 1440, scrolled: false, picks: [], msg: '', tur: 'Emin değilim',
     bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bSlots: null, bLoadingSlots: false, bSubmitting: false, bError: '', bResult: null, bCalMonth: 0 };
