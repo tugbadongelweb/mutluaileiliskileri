@@ -2713,38 +2713,45 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
 
             <sc-if value="{{ bIsStep2 }}" hint-placeholder-val="{{ false }}">
               <button type="button" onClick="{{ backToStep1 }}" style="display:inline-flex; align-items:center; gap:6px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62; background:none; border:none; cursor:pointer; padding:0; margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.5 12h-13"></path><path d="M11.5 6 5.5 12l6 6"></path></svg>Görüşme türünü değiştir</button>
-              <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">{{ selectedTypeLabel }}</h2>
-              <p style="font:400 15px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:10px 0 0">Uygun bir gün seçin.</p>
-              <div style="margin-top:18px">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
-                  <button type="button" onClick="{{ bCalPrev }}" aria-label="Önceki ay" style="display:flex; align-items:center; justify-content:center; width:30px; height:30px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:6px; cursor:pointer; color:#4B2330; flex:none" style-hover="border-color:#7D112E; color:#7D112E"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.5 12h-13"></path><path d="M11.5 6 5.5 12l6 6"></path></svg></button>
-                  <span style="font:600 14.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330">{{ bCalMonthLabel }}</span>
-                  <button type="button" onClick="{{ bCalNext }}" aria-label="Sonraki ay" style="display:flex; align-items:center; justify-content:center; width:30px; height:30px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:6px; cursor:pointer; color:#4B2330; flex:none" style-hover="border-color:#7D112E; color:#7D112E"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12h13"></path><path d="M12.5 6 18.5 12l-6 6"></path></svg></button>
+              <sc-if value="{{ bCalOpen }}" hint-placeholder-val="{{ true }}">
+                <p style="font:400 15px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:10px 0 0">Uygun bir gün seçin.</p>
+                <div style="margin-top:18px">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px">
+                    <button type="button" onClick="{{ bCalPrev }}" aria-label="Önceki ay" style="display:flex; align-items:center; justify-content:center; width:30px; height:30px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:6px; cursor:pointer; color:#4B2330; flex:none" style-hover="border-color:#7D112E; color:#7D112E"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.5 12h-13"></path><path d="M11.5 6 5.5 12l6 6"></path></svg></button>
+                    <span style="font:600 14.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330">{{ bCalMonthLabel }}</span>
+                    <button type="button" onClick="{{ bCalNext }}" aria-label="Sonraki ay" style="display:flex; align-items:center; justify-content:center; width:30px; height:30px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:6px; cursor:pointer; color:#4B2330; flex:none" style-hover="border-color:#7D112E; color:#7D112E"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 12h13"></path><path d="M12.5 6 18.5 12l-6 6"></path></svg></button>
+                  </div>
+                  <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 3px; text-align:center">
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Pzt</span>
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Sal</span>
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Çar</span>
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Per</span>
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Cum</span>
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#C7B7B0; padding:0 0 6px">Cmt</span>
+                    <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#C7B7B0; padding:0 0 6px">Paz</span>
+                    <sc-for list="{{ bCalCells }}" as="c" hint-placeholder-count="35">
+                      <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
+                        <span aria-hidden="true"></span>
+                      </sc-if>
+                      <sc-if value="{{ c.active }}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{ c.go }}" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; font:600 13px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; border:1px solid #7D112E; border-radius:8px; cursor:pointer; padding:0">{{ c.day }}</button>
+                      </sc-if>
+                      <sc-if value="{{ c.inactiveSelectable }}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{ c.go }}" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; font:500 13px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; cursor:pointer; padding:0" style-hover="border-color:#7D112E; color:#7D112E">{{ c.day }}</button>
+                      </sc-if>
+                      <sc-if value="{{ c.disabled }}" hint-placeholder-val="{{ false }}">
+                        <span style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; font:400 13px/1 'Hanken Grotesk',sans-serif; color:#D9CFC9">{{ c.day }}</span>
+                      </sc-if>
+                    </sc-for>
+                  </div>
                 </div>
-                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px 3px; text-align:center">
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Pzt</span>
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Sal</span>
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Çar</span>
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Per</span>
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#6D5E62; padding:0 0 6px">Cum</span>
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#C7B7B0; padding:0 0 6px">Cmt</span>
-                  <span style="font:600 10px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.04em; color:#C7B7B0; padding:0 0 6px">Paz</span>
-                  <sc-for list="{{ bCalCells }}" as="c" hint-placeholder-count="35">
-                    <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
-                      <span aria-hidden="true"></span>
-                    </sc-if>
-                    <sc-if value="{{ c.active }}" hint-placeholder-val="{{ false }}">
-                      <button type="button" onClick="{{ c.go }}" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; font:600 13px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; border:1px solid #7D112E; border-radius:8px; cursor:pointer; padding:0">{{ c.day }}</button>
-                    </sc-if>
-                    <sc-if value="{{ c.inactiveSelectable }}" hint-placeholder-val="{{ false }}">
-                      <button type="button" onClick="{{ c.go }}" style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; font:500 13px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; cursor:pointer; padding:0" style-hover="border-color:#7D112E; color:#7D112E">{{ c.day }}</button>
-                    </sc-if>
-                    <sc-if value="{{ c.disabled }}" hint-placeholder-val="{{ false }}">
-                      <span style="aspect-ratio:1; display:flex; align-items:center; justify-content:center; font:400 13px/1 'Hanken Grotesk',sans-serif; color:#D9CFC9">{{ c.day }}</span>
-                    </sc-if>
-                  </sc-for>
+              </sc-if>
+              <sc-if value="{{ bDateSelected }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 14px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px">
+                  <span style="font:600 14px/1.3 'Hanken Grotesk',sans-serif; color:#4B2330">{{ selectedDateLabel }}</span>
+                  <button type="button" onClick="{{ changeDate }}" style="font:500 12.5px/1 'Hanken Grotesk',sans-serif; color:#7D112E; background:none; border:none; cursor:pointer; padding:0; white-space:nowrap">Tarihi değiştir</button>
                 </div>
-              </div>
+              </sc-if>
               <div id="bTimesAnchor" style="scroll-margin-top:100px; scroll-margin-bottom:24px">
                 <sc-if value="{{ bLoadingSlots }}" hint-placeholder-val="{{ false }}">
                   <p style="font:400 14px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:18px 0 0">Müsaitlik kontrol ediliyor…</p>
@@ -3541,6 +3548,8 @@ class Component extends DCLogic {
       bIsStep2: this.BOOKING_ENABLED && st.bStep === 2,
       bIsStep3: this.BOOKING_ENABLED && st.bStep === 3,
       bIsStep4: this.BOOKING_ENABLED && st.bStep === 4,
+      bCalOpen: !st.bDate,
+      bDateSelected: !!st.bDate,
       bName: st.bName,
       bEmail: st.bEmail,
       bPhone: st.bPhone,
@@ -3612,6 +3621,7 @@ class Component extends DCLogic {
       })(),
       backToStep1: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 1, bError: '' }); },
       backToStep2: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 2, bError: '' }); },
+      changeDate: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bDate: '', bTime: '', bSlots: null, bError: '' }); },
       setBName: (e) => this.setState({ bName: e.target.value }),
       setBEmail: (e) => this.setState({ bEmail: e.target.value }),
       setBPhone: (e) => this.setState({ bPhone: e.target.value }),
