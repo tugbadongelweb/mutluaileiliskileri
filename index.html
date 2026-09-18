@@ -3575,6 +3575,7 @@ class Component extends DCLogic {
         const occupied = new Set((st.bSlots && st.bSlots.occupied) || []);
         return this.WORK_HOURS.map((h, i) => {
           let ok = i + need <= this.WORK_HOURS.length;
+          if (ok && need > 1 && i % need !== 0) ok = false;
           if (ok) { for (let k = 0; k < need; k++) { if (occupied.has(this.WORK_HOURS[i + k])) { ok = false; break; } } }
           return {
             time: h, available: ok, unavailable: !ok,
