@@ -2681,10 +2681,10 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
     <section style="padding:clamp(48px,6vw,90px) 0 clamp(56px,8vw,110px)">
       <div style="width:100%; max-width:1320px; margin:0 auto; padding:0 clamp(20px,4vw,48px)">
         <p style="font:500 11.5px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.18em; text-transform:uppercase; color:#7D112E; margin:0; display:flex; align-items:center; justify-content:center; gap:9px"><span aria-hidden="true" style="width:6px; height:6px; background:#3C887E; border-radius:50%; flex:none"></span>İletişim</p>
-        <h1 style="font:400 clamp(34px,5vw,58px)/1.1 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; letter-spacing:-0.015em; text-align:center; margin:22px auto 0; max-width:20ch; text-wrap:pretty">Görüşme planlamak ya da soru sormak için yazabilirsiniz.</h1>
+        <h1 style="font:400 clamp(34px,5vw,58px)/1.1 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; letter-spacing:-0.015em; text-align:center; margin:22px auto 0; max-width:20ch; text-wrap:pretty">Randevunuzu birlikte planlayalım.</h1>
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:clamp(32px,5vw,72px); margin-top:clamp(36px,5vw,64px); align-items:start">
           <div>
-            <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0; max-width:44ch">İlk mesajınızda ayrıntı anlatmanız gerekmiyor. Nasıl bir görüşme düşündüğünüzü yazmanız yeterli.</p>
+            <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0; max-width:44ch">Görüşme türünü ve size uygun saati seçin; ödeme adımından sonra randevunuz kesinleşir. Sorularınız için WhatsApp veya e-posta üzerinden de ulaşabilirsiniz.</p>
             <ul style="list-style:none; margin:32px 0 0; padding:0; border-top:1px solid #EFD5DC">
               <sc-for list="{{ contactRows }}" as="r" hint-placeholder-count="6">
                 <li style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; padding:16px 0; border-bottom:1px solid #EFD5DC">
@@ -2697,44 +2697,91 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
           </div>
 
           <div style="background:#FFFFFF; border-radius:12px; padding:clamp(28px,3vw,44px); box-shadow:0 10px 40px rgba(125,17,46,0.06)">
-            <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
-              <div style="animation:fade 300ms ease both">
-                <h2 style="font:400 clamp(24px,2.6vw,32px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Mesajınız iletildi.</h2>
-                <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0">En kısa sürede size dönüş yapacağım. [Dönüş süresi — CLIENT TO CONFIRM]</p>
-                <button type="button" onClick="{{ resetForm }}" style="font:600 14.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:none; border:1px solid #EFD5DC; padding:15px 26px; border-radius:8px; margin-top:26px; cursor:pointer">Yeni mesaj</button>
+
+            <sc-if value="{{ bIsStep1 }}" hint-placeholder-val="{{ true }}">
+              <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Randevu Al</h2>
+              <p style="font:400 15px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:10px 0 0">Önce görüşme türünü seçin.</p>
+              <div style="display:flex; flex-direction:column; gap:12px; margin-top:24px">
+                <sc-for list="{{ sessionTypes }}" as="t" hint-placeholder-count="3">
+                  <button type="button" onClick="{{ t.go }}" style="display:flex; align-items:center; justify-content:space-between; gap:14px; text-align:left; font:inherit; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; padding:16px 18px; cursor:pointer; transition:border-color 300ms ease" style-hover="border-color:#7D112E">
+                    <span>
+                      <span style="display:block; font:600 15px/1.3 'Hanken Grotesk',sans-serif; color:#4B2330">{{ t.label }}</span>
+                      <span style="display:block; font:400 13px/1.5 'Hanken Grotesk',sans-serif; color:#6D5E62; margin-top:3px">{{ t.minutes }} dakika · {{ t.price }}</span>
+                    </span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7D112E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12h13"></path><path d="M12.5 6 18.5 12l-6 6"></path></svg>
+                  </button>
+                </sc-for>
               </div>
             </sc-if>
-            <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
-              <form onSubmit="{{ submitForm }}" style="display:flex; flex-direction:column; gap:20px">
-                <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">İletişim formu</h2>
+
+            <sc-if value="{{ bIsStep2 }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ backToStep1 }}" style="display:inline-flex; align-items:center; gap:6px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62; background:none; border:none; cursor:pointer; padding:0; margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.5 12h-13"></path><path d="M11.5 6 5.5 12l6 6"></path></svg>Görüşme türünü değiştir</button>
+              <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">{{ selectedTypeLabel }}</h2>
+              <p style="font:400 15px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:10px 0 0">Uygun bir gün seçin.</p>
+              <div style="display:flex; gap:8px; overflow-x:auto; padding:4px 0 6px; margin-top:18px">
+                <sc-for list="{{ bDayList }}" as="d" hint-placeholder-count="8">
+                  <sc-if value="{{ d.active }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" onClick="{{ d.go }}" style="flex:none; font:600 12.5px/1.3 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; border:1px solid #7D112E; border-radius:8px; padding:10px 14px; cursor:pointer; white-space:nowrap">{{ d.label }}</button>
+                  </sc-if>
+                  <sc-if value="{{ d.inactive }}" hint-placeholder-val="{{ true }}">
+                    <button type="button" onClick="{{ d.go }}" style="flex:none; font:500 12.5px/1.3 'Hanken Grotesk',sans-serif; color:#4B2330; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; padding:10px 14px; cursor:pointer; white-space:nowrap" style-hover="border-color:#7D112E">{{ d.label }}</button>
+                  </sc-if>
+                </sc-for>
+              </div>
+              <sc-if value="{{ bLoadingSlots }}" hint-placeholder-val="{{ false }}">
+                <p style="font:400 14px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:18px 0 0">Müsaitlik kontrol ediliyor…</p>
+              </sc-if>
+              <sc-if value="{{ bShowSlots }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(76px,1fr)); gap:8px; margin-top:18px">
+                  <sc-for list="{{ bTimeList }}" as="s" hint-placeholder-count="8">
+                    <sc-if value="{{ s.available }}" hint-placeholder-val="{{ true }}">
+                      <button type="button" onClick="{{ s.go }}" style="font:500 13.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px; padding:12px 0; cursor:pointer" style-hover="border-color:#7D112E; color:#7D112E">{{ s.time }}</button>
+                    </sc-if>
+                    <sc-if value="{{ s.unavailable }}" hint-placeholder-val="{{ false }}">
+                      <span style="font:500 13.5px/1 'Hanken Grotesk',sans-serif; color:#C7B7B0; background:#F4EDEB; border:1px solid #EFD5DC; border-radius:8px; padding:12px 0; text-align:center; text-decoration:line-through">{{ s.time }}</span>
+                    </sc-if>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ bHasError }}" hint-placeholder-val="{{ false }}">
+                <p style="font:500 14px/1.5 'Hanken Grotesk',sans-serif; color:#B3261E; margin:18px 0 0">{{ bError }}</p>
+              </sc-if>
+            </sc-if>
+
+            <sc-if value="{{ bIsStep3 }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ backToStep2 }}" style="display:inline-flex; align-items:center; gap:6px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62; background:none; border:none; cursor:pointer; padding:0; margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18.5 12h-13"></path><path d="M11.5 6 5.5 12l6 6"></path></svg>Tarih/saati değiştir</button>
+              <h2 style="font:400 clamp(22px,2.2vw,28px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Bilgilerinizi girin</h2>
+              <p style="font:400 14px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:8px 0 0">{{ selectedTypeLabel }} · {{ selectedDateLabel }} · {{ bTime }}</p>
+              <div style="display:flex; flex-direction:column; gap:20px; margin-top:22px">
                 <label style="display:flex; flex-direction:column; gap:8px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.06em; text-transform:uppercase; color:#6D5E62">Ad Soyad
-                  <input type="text" name="ad" required="" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
+                  <input type="text" value="{{ bName }}" onChange="{{ setBName }}" required="" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
                 </label>
                 <label style="display:flex; flex-direction:column; gap:8px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.06em; text-transform:uppercase; color:#6D5E62">E-posta
-                  <input type="email" name="eposta" required="" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
+                  <input type="email" value="{{ bEmail }}" onChange="{{ setBEmail }}" required="" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
                 </label>
                 <label style="display:flex; flex-direction:column; gap:8px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.06em; text-transform:uppercase; color:#6D5E62">Telefon
-                  <input type="tel" name="telefon" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
-                </label>
-                <label style="display:flex; flex-direction:column; gap:8px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.06em; text-transform:uppercase; color:#6D5E62">Görüşme türü
-                  <select name="tur" value="{{ tur }}" onChange="{{ setTur }}" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
-                    <option>Çift</option>
-                    <option>Aile</option>
-                    <option>Bireysel</option>
-                    <option>Emin değilim</option>
-                  </select>
-                </label>
-                <label style="display:flex; flex-direction:column; gap:8px; font:500 12.5px/1 'Hanken Grotesk',sans-serif; letter-spacing:0.06em; text-transform:uppercase; color:#6D5E62">Mesajınız
-                  <textarea name="mesaj" rows="5" required="" value="{{ msg }}" onChange="{{ setMsg }}" placeholder="Nasıl bir görüşme düşündüğünüzü kısaca yazabilirsiniz." style="font:400 16.5px/1.6 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; resize:vertical; text-transform:none; letter-spacing:0"></textarea>
+                  <input type="tel" value="{{ bPhone }}" onChange="{{ setBPhone }}" style="font:400 16.5px/1.4 'Hanken Grotesk',sans-serif; color:#4B2330; background:transparent; border:none; border-bottom:1px solid rgba(75,35,48,0.22); border-radius:0; padding:13px 0; text-transform:none; letter-spacing:0">
                 </label>
                 <label style="display:flex; gap:12px; align-items:flex-start; font:400 14.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62">
-                  <input type="checkbox" required="" style="margin-top:4px; width:18px; height:18px; accent-color:#7D112E; flex:none">
+                  <input type="checkbox" checked="{{ bKvkk }}" onChange="{{ toggleBKvkk }}" style="margin-top:4px; width:18px; height:18px; accent-color:#7D112E; flex:none">
                   <span>Kişisel verilerimin <a href="#" onClick="{{ goKvkk }}">KVKK Aydınlatma Metni</a> kapsamında işlenmesini onaylıyorum.</span>
                 </label>
-                <button type="submit" style="font:600 15px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; border:none; padding:18px 26px; border-radius:8px; cursor:pointer; transition:background 350ms ease" style-hover="background:#4B2330">Mesajımı Gönder</button>
-                <p style="font:400 13.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">Bu form acil durum hizmeti sağlamaz. Lütfen bu form üzerinden sağlık geçmişi gibi hassas bilgiler paylaşmayınız.</p>
-              </form>
+                <sc-if value="{{ bHasError }}" hint-placeholder-val="{{ false }}">
+                  <p style="font:500 14px/1.5 'Hanken Grotesk',sans-serif; color:#B3261E; margin:0">{{ bError }}</p>
+                </sc-if>
+                <button type="button" onClick="{{ submitBooking }}" disabled="{{ bSubmitting }}" style="font:600 15px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; border:none; padding:18px 26px; border-radius:8px; cursor:pointer; transition:background 350ms ease" style-hover="background:#4B2330">{{ submitLabel }}</button>
+                <p style="font:400 13px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">Devam ettiğinizde ödeme sayfasına yönlendirileceksiniz. Bu form acil durum hizmeti sağlamaz.</p>
+              </div>
             </sc-if>
+
+            <sc-if value="{{ bIsStep4 }}" hint-placeholder-val="{{ false }}">
+              <div style="animation:fade 300ms ease both">
+                <h2 style="font:400 clamp(24px,2.6vw,32px)/1.2 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:0">Randevunuz alındı.</h2>
+                <p style="font:400 17px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0">{{ selectedTypeLabel }} · {{ selectedDateLabel }} · {{ bTime }} için yeriniz ayrıldı. Online ödeme sistemi yakında aktif olacak; görüşme detayları ve ödeme bilgisi için sizinle e-posta veya WhatsApp üzerinden iletişime geçilecektir.</p>
+                <button type="button" onClick="{{ resetBooking }}" style="font:600 14.5px/1 'Hanken Grotesk',sans-serif; color:#4B2330; background:none; border:1px solid #EFD5DC; padding:15px 26px; border-radius:8px; margin-top:26px; cursor:pointer">Yeni randevu</button>
+              </div>
+            </sc-if>
+
           </div>
         </div>
       </div>
@@ -2821,7 +2868,8 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;professionalTitle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Aile Danışmanı&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İçerik&quot;},&quot;heroHeadline&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Bazen sorun sevgisizlik değil, birbirimizi duyamamaktır.&quot;,&quot;İlişkinize başka bir yerden bakmak mümkün.&quot;,&quot;Birbirinizi yeniden duymaya alan açın.&quot;,&quot;İlişkilerde daha dengeli bir alan mümkün.&quot;],&quot;default&quot;:&quot;İlişkilerde daha dengeli bir alan mümkün.&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İçerik&quot;},&quot;showInstagram&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Bölümler&quot;},&quot;stickyMobileCta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Bölümler&quot;}}">
 class Component extends DCLogic {
-  state = { page: 'home', svc: 0, art: 0, legal: 'kvkk', menu: false, faq: null, faqAll: false, cat: 'Tümü', sent: false, vw: 1440, scrolled: false, picks: [], msg: '', tur: 'Emin değilim' };
+  state = { page: 'home', svc: 0, art: 0, legal: 'kvkk', menu: false, faq: null, faqAll: false, cat: 'Tümü', sent: false, vw: 1440, scrolled: false, picks: [], msg: '', tur: 'Emin değilim',
+    bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bSlots: null, bLoadingSlots: false, bSubmitting: false, bError: '', bResult: null };
 
   ICONS = {
     heart: ['M12 20s-7-4.35-7-9.5A4.2 4.2 0 0 1 12 7.6 4.2 4.2 0 0 1 19 10.5c0 5.15-7 9.5-7 9.5z'],
@@ -3096,6 +3144,14 @@ class Component extends DCLogic {
 
   TRUST = ['Aile & Çift Danışmanlığı', 'Bireysel Danışmanlık (21+)', 'Online görüşme'];
 
+  WORK_HOURS = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+
+  BOOKING_TYPES = [
+    { key: 'bireysel', label: 'Bireysel Danışmanlık', minutes: 60, cells: 1, price: '[Fiyat — CLIENT TO CONFIRM]' },
+    { key: 'cift', label: 'Çift Danışmanlığı', minutes: 90, cells: 2, price: '[Fiyat — CLIENT TO CONFIRM]' },
+    { key: 'aile', label: 'Aile Danışmanlığı', minutes: 90, cells: 2, price: '[Fiyat — CLIENT TO CONFIRM]' }
+  ];
+
   SITE = {
     name: 'Tuğba Döngel',
     wordmark: 'Tuğba Döngel',
@@ -3250,6 +3306,46 @@ class Component extends DCLogic {
         if (path && window.location.pathname !== path) window.history.pushState({ dc: true }, '', path);
       }
     };
+  }
+
+  async fetchSlots(dateStr) {
+    this.setState({ bDate: dateStr, bTime: '', bSlots: null, bLoadingSlots: true, bError: '' });
+    try {
+      const res = await fetch('/api/musaitlik?date=' + encodeURIComponent(dateStr));
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'error');
+      this.setState({ bSlots: data, bLoadingSlots: false });
+    } catch (e) {
+      this.setState({ bLoadingSlots: false, bError: 'Müsaitlik bilgisi alınamadı. Lütfen tekrar deneyin.' });
+    }
+  }
+
+  async submitBooking() {
+    const st = this.state;
+    if (!st.bKvkk) { this.setState({ bError: 'Devam etmek için KVKK metnini onaylamanız gerekiyor.' }); return; }
+    if (!st.bName || st.bName.trim().length < 2) { this.setState({ bError: 'Lütfen adınızı ve soyadınızı yazın.' }); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.bEmail || '')) { this.setState({ bError: 'Lütfen geçerli bir e-posta adresi yazın.' }); return; }
+    this.setState({ bSubmitting: true, bError: '' });
+    try {
+      const res = await fetch('/api/randevu', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: st.bDate, time: st.bTime, sessionType: st.bType, name: st.bName, email: st.bEmail, phone: st.bPhone, kvkkOnay: st.bKvkk })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        if (data.error === 'slot_taken') {
+          this.setState({ bSubmitting: false, bStep: 2, bError: 'Bu saat az önce başka biri tarafından alındı. Lütfen başka bir saat seçin.' });
+          this.fetchSlots(st.bDate);
+          return;
+        }
+        throw new Error(data.error || 'unknown');
+      }
+      if (data.paymentUrl) { window.location.href = data.paymentUrl; return; }
+      this.setState({ bSubmitting: false, bStep: 4, bResult: data });
+    } catch (e) {
+      this.setState({ bSubmitting: false, bError: 'Randevu oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin veya WhatsApp üzerinden ulaşın.' });
+    }
   }
 
   renderVals() {
@@ -3410,10 +3506,68 @@ class Component extends DCLogic {
         { label: 'E-posta', value: this.SITE.email },
         { label: 'Görüşme biçimi', value: 'Yalnızca online · Dünyanın her yerinden' }
       ],
-      sent: st.sent,
-      notSent: !st.sent,
-      submitForm: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ sent: true }); },
-      resetForm: () => this.setState({ sent: false })
+      bIsStep1: st.bStep === 1,
+      bIsStep2: st.bStep === 2,
+      bIsStep3: st.bStep === 3,
+      bIsStep4: st.bStep === 4,
+      bName: st.bName,
+      bEmail: st.bEmail,
+      bPhone: st.bPhone,
+      bKvkk: st.bKvkk,
+      bTime: st.bTime,
+      bSubmitting: st.bSubmitting,
+      bLoadingSlots: st.bLoadingSlots,
+      bShowSlots: !st.bLoadingSlots && !!st.bSlots,
+      bHasError: !!st.bError,
+      bError: st.bError,
+      submitLabel: st.bSubmitting ? 'Gönderiliyor…' : 'Devam Et ve Öde',
+      selectedTypeLabel: (this.BOOKING_TYPES.find(t => t.key === st.bType) || {}).label || '',
+      selectedDateLabel: st.bDate ? new Date(st.bDate + 'T00:00:00').toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' }) : '',
+      sessionTypes: this.BOOKING_TYPES.map(t => ({
+        key: t.key, label: t.label, minutes: t.minutes, price: t.price,
+        go: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bType: t.key, bStep: 2, bDate: '', bTime: '', bSlots: null, bError: '' }); }
+      })),
+      bDayList: (() => {
+        const days = [];
+        const d = new Date();
+        d.setHours(0, 0, 0, 0);
+        for (let guard = 0; days.length < 10 && guard < 30; guard++) {
+          const day = d.getDay();
+          if (day >= 1 && day <= 5) {
+            const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            days.push({
+              iso,
+              label: d.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric', month: 'short' }),
+              active: st.bDate === iso,
+              inactive: st.bDate !== iso,
+              go: (e) => { if (e && e.preventDefault) e.preventDefault(); this.fetchSlots(iso); }
+            });
+          }
+          d.setDate(d.getDate() + 1);
+        }
+        return days;
+      })(),
+      bTimeList: (() => {
+        const type = this.BOOKING_TYPES.find(t => t.key === st.bType);
+        const need = type ? type.cells : 1;
+        const occupied = new Set((st.bSlots && st.bSlots.occupied) || []);
+        return this.WORK_HOURS.map((h, i) => {
+          let ok = i + need <= this.WORK_HOURS.length;
+          if (ok) { for (let k = 0; k < need; k++) { if (occupied.has(this.WORK_HOURS[i + k])) { ok = false; break; } } }
+          return {
+            time: h, available: ok, unavailable: !ok,
+            go: ok ? ((e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bTime: h, bStep: 3, bError: '' }); }) : null
+          };
+        });
+      })(),
+      backToStep1: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 1, bError: '' }); },
+      backToStep2: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 2, bError: '' }); },
+      setBName: (e) => this.setState({ bName: e.target.value }),
+      setBEmail: (e) => this.setState({ bEmail: e.target.value }),
+      setBPhone: (e) => this.setState({ bPhone: e.target.value }),
+      toggleBKvkk: (e) => this.setState({ bKvkk: e.target.checked }),
+      submitBooking: (e) => { if (e && e.preventDefault) e.preventDefault(); this.submitBooking(); },
+      resetBooking: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bStep: 1, bType: '', bDate: '', bTime: '', bName: '', bEmail: '', bPhone: '', bKvkk: false, bSlots: null, bError: '', bResult: null }); }
     };
   }
 }

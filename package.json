@@ -1,0 +1,9 @@
+{
+  "name": "mutluaileiliskileri",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tuğba Döngel Aile Danışmanlığı — statik site + randevu API fonksiyonları",
+  "dependencies": {
+    "@upstash/redis": "^1.34.3"
+  }
+}
