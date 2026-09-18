@@ -2745,7 +2745,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
                   </sc-for>
                 </div>
               </div>
-              <div id="bTimesAnchor" style="scroll-margin-top:24px">
+              <div id="bTimesAnchor" style="scroll-margin-top:100px; scroll-margin-bottom:24px">
                 <sc-if value="{{ bLoadingSlots }}" hint-placeholder-val="{{ false }}">
                   <p style="font:400 14px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:18px 0 0">Müsaitlik kontrol ediliyor…</p>
                 </sc-if>
@@ -3327,14 +3327,20 @@ class Component extends DCLogic {
     };
   }
 
+  scrollTimesIntoView() {
+    if (typeof window === 'undefined') return;
+    setTimeout(() => {
+      const el = document.getElementById('bTimesAnchor');
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const fitsInViewport = rect.height <= window.innerHeight;
+      el.scrollIntoView({ behavior: 'smooth', block: fitsInViewport ? 'nearest' : 'start' });
+    }, 60);
+  }
+
   async fetchSlots(dateStr) {
     this.setState({ bDate: dateStr, bTime: '', bSlots: null, bLoadingSlots: true, bError: '' });
-    if (typeof window !== 'undefined') {
-      setTimeout(() => {
-        const el = document.getElementById('bTimesAnchor');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 60);
-    }
+    this.scrollTimesIntoView();
     try {
       const res = await fetch('/api/musaitlik?date=' + encodeURIComponent(dateStr));
       const data = await res.json();
@@ -3343,6 +3349,8 @@ class Component extends DCLogic {
     } catch (e) {
       this.setState({ bLoadingSlots: false, bError: 'Müsaitlik bilgisi alınamadı. Lütfen tekrar deneyin.' });
     }
+    // Saatler yüklendikten sonra blok büyüyor; tam liste görünür olsun diye tekrar hizala.
+    this.scrollTimesIntoView();
   }
 
   async submitBooking() {
