@@ -113,6 +113,15 @@ export async function createGoogleMeetEvent({ name, email, startDateTime, endDat
   };
 }
 
+/** Site randevusunun takvim etkinliğini siler; danışana Google iptal e-postası gider. */
+export async function deleteBookingEvent(bookingId) {
+  await getCalendar().events.delete({
+    calendarId: process.env.GOOGLE_CALENDAR_ID,
+    eventId: bookingEventId(bookingId),
+    sendUpdates: 'all',
+  });
+}
+
 /**
  * Kesinleşmiş (ödenmiş) bir randevu için Meet'li takvim etkinliğini oluşturur
  * ve sonucu kayda yazar. Takvim hatası randevuyu/ödemeyi bozmaz: kayıt

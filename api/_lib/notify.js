@@ -1,4 +1,5 @@
 import { updateBookingRecord } from './redis.js';
+import { cancelUrl } from './cancel.js';
 
 /**
  * Yeni kesinleşen randevu için Tuğba'ya e-posta bildirimi (Resend API).
@@ -50,11 +51,22 @@ export async function notifyNewBooking(record) {
 
 const TR_DATE = new Intl.DateTimeFormat('tr-TR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
-export function renderBookingEmail(r) {
+/** "20 Ekim 2026 Salı" */
+function formatBookingDate(r) {
+  return TR_DATE.format(new Date(`${r.date}T00:00:00Z`));
+}
+
+/** "20 Ekim 2026 Salı, 15:00 – 16:00 (İstanbul)" */
+export function formatBookingWhen(r) {
   const [h, m] = r.time.split(':').map(Number);
   const endTotal = h * 60 + m + (r.minutes || 60);
   const end = `${String(Math.floor(endTotal / 60)).padStart(2, '0')}:${String(endTotal % 60).padStart(2, '0')}`;
-  const dateLabel = TR_DATE.format(new Date(`${r.date}T00:00:00Z`));
+  return `${formatBookingDate(r)}, ${r.time} – ${end} (İstanbul)`;
+}
+
+export function renderBookingEmail(r) {
+  const dateLabel = formatBookingDate(r);
+  const cancel = cancelUrl(r.id);
 
   const warnings = [];
   if (r.status === 'odendi_cakisma') {
@@ -65,8 +77,7 @@ export function renderBookingEmail(r) {
 
   const rows = [
     ['Görüşme', r.sessionLabel],
-    ['Tarih', dateLabel],
-    ['Saat', `${r.time} – ${end} (İstanbul)`],
+    ['Tarih / saat', formatBookingWhen(r)],
     ['Danışan', r.name],
     ['E-posta', r.email],
     ['Telefon', r.phone || '—'],
@@ -77,12 +88,17 @@ export function renderBookingEmail(r) {
   ];
 
   const subject = `${warnings.length ? '⚠ ' : ''}Yeni randevu: ${r.name} — ${dateLabel} ${r.time}`;
-  const text = [...warnings, warnings.length ? '' : null, ...rows.map(([k, v]) => `${k}: ${v}`)].filter((x) => x !== null).join('\n');
+  const text = [
+    ...warnings, warnings.length ? '' : null,
+    ...rows.map(([k, v]) => `${k}: ${v}`),
+    cancel ? `\nRandevuyu iptal etmek için (önce onay sayfası açılır): ${cancel}` : null,
+  ].filter((x) => x !== null).join('\n');
   const link = (v) => (/^https:\/\//.test(v) ? `<a href="${esc(v)}">${esc(v)}</a>` : esc(v));
   const html = `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.5;color:#222">
 ${warnings.map((w) => `<p style="background:#fff4e5;border-left:4px solid #e67e22;padding:10px 12px">${esc(w)}</p>`).join('\n')}
 <h2 style="font-size:18px;margin:0 0 12px">Yeni randevu kesinleşti</h2>
 <table style="border-collapse:collapse">${rows.map(([k, v]) => `<tr><td style="padding:4px 16px 4px 0;color:#666;vertical-align:top">${esc(k)}</td><td style="padding:4px 0">${link(String(v))}</td></tr>`).join('')}</table>
+${cancel ? `<p style="margin-top:24px;font-size:13px;color:#666">Randevuyu iptal etmeniz gerekirse: <a href="${esc(cancel)}" style="color:#c0392b">Randevuyu iptal et</a> (önce onay sayfası açılır; ödeme iadesi PayTR panelinden ayrıca yapılır)</p>` : ''}
 </div>`;
   return { subject, text, html };
 }
