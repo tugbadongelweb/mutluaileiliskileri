@@ -13,6 +13,7 @@ import {
 } from './_lib/redis.js';
 import { isPaytrConfigured, priceForSessionType, createPaytrPaymentUrl } from './_lib/paytr.js';
 import { addBookingToCalendar, getGoogleBusyCells, describeGoogleError } from './_lib/google-calendar.js';
+import { notifyNewBooking } from './_lib/notify.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NAME_MAX = 100;
@@ -154,7 +155,8 @@ export default async function handler(req, res) {
     await confirmCells(date, cells, id);
     record.status = 'onaylandi';
     await saveBookingRecord(id, record);
-    await addBookingToCalendar(record);
+    const confirmed = (await addBookingToCalendar(record)) || record;
+    await notifyNewBooking(confirmed);
     res.status(200).json({ ok: true, id, paymentUrl: null, pendingPaymentSetup: true });
   } catch (e) {
     if (reserved) {

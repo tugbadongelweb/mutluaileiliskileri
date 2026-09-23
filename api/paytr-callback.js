@@ -8,6 +8,7 @@ import {
   releaseLock,
 } from './_lib/redis.js';
 import { addBookingToCalendar } from './_lib/google-calendar.js';
+import { notifyNewBooking } from './_lib/notify.js';
 
 /**
  * PayTR'nin ödeme sonucu için sunucudan sunucuya çağırdığı bildirim (webhook)
@@ -83,6 +84,8 @@ export default async function handler(req, res) {
       if (paid.status === 'odendi') {
         await addBookingToCalendar(paid);
       }
+      // Tuğba'ya bildirim (randevu başına bir kez; çakışma/takvim hatası uyarısıyla).
+      await notifyNewBooking(await getBookingRecord(id));
     } else if (record.status === 'odeme_bekleniyor') {
       await updateBookingRecord(id, {
         status: 'odeme_basarisiz',
