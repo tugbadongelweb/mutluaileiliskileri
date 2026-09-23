@@ -1,5 +1,6 @@
 import { verifyPaytrCallback } from '../lib/paytr.js';
 import { getBookingRecord, updateBookingRecord, releaseCells, confirmCells } from '../lib/redis.js';
+import { addBookingToCalendar } from '../lib/google-calendar.js';
 
 /**
  * PayTR'nin ödeme sonucu için sunucudan sunucuya çağırdığı bildirim (webhook)
@@ -36,8 +37,9 @@ export default async function handler(req, res) {
     const record = await getBookingRecord(id);
     if (record && record.status === 'odeme_bekleniyor') {
       if (status === 'success') {
-        await updateBookingRecord(id, { status: 'odendi', paidAt: new Date().toISOString() });
+        const paid = await updateBookingRecord(id, { status: 'odendi', paidAt: new Date().toISOString() });
         await confirmCells(record.date, record.cells);
+        await addBookingToCalendar(paid);
       } else {
         await updateBookingRecord(id, { status: 'odeme_basarisiz' });
         await releaseCells(record.date, record.cells);

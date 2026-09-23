@@ -1,10 +1,9 @@
 import crypto from 'node:crypto';
 import { checkRateLimit } from '../../lib/redis.js';
-import { isCalendarConfigured, createGoogleMeetEvent, describeGoogleError, TIME_ZONE } from '../../lib/google-calendar.js';
+import { isCalendarConfigured, createGoogleMeetEvent, deleteGoogleEvent, describeGoogleError, TIME_ZONE } from '../../lib/google-calendar.js';
 
 /**
- * GEÇİCİ entegrasyon testi — randevu akışına bağlı değildir, test bitince
- * silinmelidir.
+ * GEÇİCİ entegrasyon testi — test bitince silinmelidir.
  *
  * Herkese açık bir GET ile takvime etkinlik açılamasın diye yalnızca
  * GOOGLE_TEST_KEY ortam değişkeni tanımlıyken ve ?key= ile eşleşince çalışır;
@@ -12,6 +11,7 @@ import { isCalendarConfigured, createGoogleMeetEvent, describeGoogleError, TIME_
  *
  *   GET /api/google/test-calendar?key=<GOOGLE_TEST_KEY>
  *   GET /api/google/test-calendar?key=<GOOGLE_TEST_KEY>&email=ornek@alan.com   (davetli eklemek için, opsiyonel)
+ *   GET /api/google/test-calendar?key=<GOOGLE_TEST_KEY>&delete=<eventId>        (test etkinliğini silmek için)
  *
  * Yarından sonraki gün İstanbul saatiyle 10:00–10:30 arası bir etkinlik oluşturur.
  */
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const rate = await checkRateLimit('google-test-calendar', 5, 600); // 10 dakikada en fazla 5 etkinlik
+  const rate = await checkRateLimit('google-test-calendar', 5, 600); // 10 dakikada en fazla 5 istek
   if (!rate.ok) {
     res.status(429).json({ ok: false, error: 'too_many_requests' });
     return;
@@ -40,10 +40,15 @@ export default async function handler(req, res) {
     return;
   }
 
-  const email = typeof req.query.email === 'string' && EMAIL_RE.test(req.query.email) ? req.query.email : undefined;
-  const day = dayAfterTomorrowInIstanbul();
-
   try {
+    if (typeof req.query.delete === 'string' && /^[a-z0-9_]{5,1024}$/i.test(req.query.delete)) {
+      await deleteGoogleEvent(req.query.delete);
+      res.status(200).json({ deleted: req.query.delete });
+      return;
+    }
+
+    const email = typeof req.query.email === 'string' && EMAIL_RE.test(req.query.email) ? req.query.email : undefined;
+    const day = dayAfterTomorrowInIstanbul();
     const result = await createGoogleMeetEvent({
       name: email ? 'Test Danışan' : undefined,
       email,
@@ -59,7 +64,7 @@ export default async function handler(req, res) {
     });
   } catch (e) {
     const err = describeGoogleError(e);
-    console.error('Google Calendar test event failed:', err.status, err.message);
+    console.error('Google Calendar test failed:', err.status, err.message);
     res.status(502).json({ ok: false, error: 'google_calendar_error', status: err.status, message: err.message });
   }
 }

@@ -11,6 +11,7 @@ import {
   checkRateLimit,
 } from '../lib/redis.js';
 import { isPaytrConfigured, priceForSessionType, createPaytrPaymentUrl } from '../lib/paytr.js';
+import { addBookingToCalendar } from '../lib/google-calendar.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NAME_MAX = 100;
@@ -130,6 +131,7 @@ export default async function handler(req, res) {
     // PayTR henüz yapılandırılmamış: yer kalıcı olarak ayrılır, ödeme adımı sonra eklenir.
     await confirmCells(date, cells);
     await saveBookingRecord(id, record);
+    await addBookingToCalendar(record);
     res.status(200).json({ ok: true, id, paymentUrl: null, pendingPaymentSetup: true });
   } catch (e) {
     if (reserved) {
