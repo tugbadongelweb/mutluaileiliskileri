@@ -3,15 +3,16 @@ import {
   SESSION_TYPES,
   isWeekday,
   isWithinBookingWindow,
+  isPastCell,
   cellsNeededFrom,
   tryReserveCells,
   releaseCells,
   confirmCells,
   saveBookingRecord,
   checkRateLimit,
-} from '../lib/redis.js';
-import { isPaytrConfigured, priceForSessionType, createPaytrPaymentUrl } from '../lib/paytr.js';
-import { addBookingToCalendar } from '../lib/google-calendar.js';
+} from './_lib/redis.js';
+import { isPaytrConfigured, priceForSessionType, createPaytrPaymentUrl } from './_lib/paytr.js';
+import { addBookingToCalendar, getGoogleBusyCells, describeGoogleError } from './_lib/google-calendar.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NAME_MAX = 100;
@@ -74,6 +75,27 @@ export default async function handler(req, res) {
     return;
   }
 
+  if (cells.some((c) => isPastCell(date, c))) {
+    res.status(409).json({ ok: false, error: 'slot_taken' });
+    return;
+  }
+
+  // Tuğba'nın Google Calendar'ındaki (elle eklenenler dahil) dolu saatler
+  // satılamaz. Google'a ulaşılamazsa slot satılmaz (fail-closed).
+  let googleBusy;
+  try {
+    googleBusy = await getGoogleBusyCells(date);
+  } catch (e) {
+    const err = describeGoogleError(e);
+    console.error('[randevu] Google FreeBusy failed:', err.status, err.message);
+    res.status(503).json({ ok: false, error: 'calendar_unavailable' });
+    return;
+  }
+  if (cells.some((c) => googleBusy.has(c))) {
+    res.status(409).json({ ok: false, error: 'slot_taken' });
+    return;
+  }
+
   const id = crypto.randomUUID().replace(/-/g, ''); // PayTR merchant_oid ile birebir aynı, tire yok
   let reserved = false;
   try {
@@ -122,20 +144,21 @@ export default async function handler(req, res) {
         res.status(200).json({ ok: true, id, paymentUrl });
         return;
       } catch (e) {
-        await releaseCells(date, cells);
+        await releaseCells(date, cells, id);
         res.status(502).json({ ok: false, error: 'paytr_error', message: String(e && e.message || e) });
         return;
       }
     }
 
     // PayTR henüz yapılandırılmamış: yer kalıcı olarak ayrılır, ödeme adımı sonra eklenir.
-    await confirmCells(date, cells);
+    await confirmCells(date, cells, id);
+    record.status = 'onaylandi';
     await saveBookingRecord(id, record);
     await addBookingToCalendar(record);
     res.status(200).json({ ok: true, id, paymentUrl: null, pendingPaymentSetup: true });
   } catch (e) {
     if (reserved) {
-      try { await releaseCells(date, cells); } catch {}
+      try { await releaseCells(date, cells, id); } catch {}
     }
     res.status(500).json({ ok: false, error: 'server_error', message: String(e && e.message || e) });
   }

@@ -37,14 +37,27 @@ export function isWeekday(dateStr) {
   return day >= 1 && day <= 5;
 }
 
-/** Bir tarihin bugünden itibaren makul bir randevu penceresinde (0–60 gün) olduğunu doğrular. */
+// Randevu saatleri İstanbul saatidir. Türkiye 2016'dan beri yaz saati
+// uygulamadan sabit UTC+3 kullanır.
+export const TZ_OFFSET = '+03:00';
+
+/** İstanbul saatine göre bugünün tarihi, YYYY-MM-DD. */
+export function todayInIstanbul(now = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(now);
+}
+
+/** Bir tarihin bugünden (İstanbul) itibaren makul bir randevu penceresinde (0–60 gün) olduğunu doğrular. */
 export function isWithinBookingWindow(dateStr) {
   const d = new Date(dateStr + 'T00:00:00Z');
   if (Number.isNaN(d.getTime())) return false;
-  const now = new Date();
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const today = new Date(todayInIstanbul() + 'T00:00:00Z');
   const diffDays = Math.round((d.getTime() - today.getTime()) / 86400000);
   return diffDays >= 0 && diffDays <= 60;
+}
+
+/** Hücrenin başlangıç anı (İstanbul saati) geçmişte mi — bugünün geçmiş saatleri satılamaz. */
+export function isPastCell(dateStr, time, now = new Date()) {
+  return new Date(`${dateStr}T${time}:00${TZ_OFFSET}`).getTime() <= now.getTime();
 }
 
 function cellsFor(sessionType) {
@@ -57,7 +70,10 @@ function cellsFor(sessionType) {
 // sayede ödeme tamamlamadan bırakılan randevular takvimi kalıcı olarak
 // kilitlemez. Ödeme onaylanınca (veya PayTR yapılandırılmamışken doğrudan)
 // confirmCells() ile süre uzun bir değere çekilir.
-const HOLD_TTL_SECONDS = 15 * 60; // ödeme bekleyen rezervasyon için 15 dakika
+// PayTR ödeme sayfası timeout_limit (bkz. paytr.js, 20 dk) boyunca açık
+// kalabilir; tutma süresi bundan uzun olmalı ki ödeme sürerken slot başkasına
+// satılmasın.
+const HOLD_TTL_SECONDS = 30 * 60; // ödeme bekleyen rezervasyon için 30 dakika
 const CONFIRMED_TTL_SECONDS = 60 * 60 * 24 * 400; // onaylanmış randevu için ~400 gün
 
 function cellKey(dateStr, time) {
@@ -112,18 +128,66 @@ export async function tryReserveCells(dateStr, cells, bookingId) {
   return true;
 }
 
-export async function releaseCells(dateStr, cells) {
-  const redis = getRedis();
+// Hücreler yalnızca sahibi olan randevu (değeri = bookingId) tarafından
+// bırakılabilir/onaylanabilir. Aksi halde tutma süresi dolmuş bir randevunun
+// geç gelen PayTR bildirimi, aynı saati bu arada almış başka birinin
+// hücresini silebilir veya uzatabilirdi. Kontrol + işlem Lua ile atomiktir.
+const RELEASE_OWNED_SCRIPT = `
+local n = 0
+for _, k in ipairs(KEYS) do
+  if redis.call('GET', k) == ARGV[1] then redis.call('DEL', k); n = n + 1 end
+end
+return n`;
+
+// Sahibiyse süresini uzatır, boşsa (tutma süresi dolmuşsa) yeniden alır,
+// başkasınınsa dokunmaz ve çakışma sayar.
+const CONFIRM_OWNED_SCRIPT = `
+local conflicts = 0
+for _, k in ipairs(KEYS) do
+  local v = redis.call('GET', k)
+  if v == ARGV[1] then redis.call('EXPIRE', k, ARGV[2])
+  elseif not v then redis.call('SET', k, ARGV[1], 'EX', ARGV[2])
+  else conflicts = conflicts + 1 end
+end
+return conflicts`;
+
+export async function releaseCells(dateStr, cells, bookingId) {
   const keys = cells.map((c) => cellKey(dateStr, c));
-  await redis.del(...keys);
+  return getRedis().eval(RELEASE_OWNED_SCRIPT, keys, [bookingId]);
 }
 
-/** Ödeme onaylandığında (veya ödeme gerekmediğinde) hücrelerin süresini uzun bir değere çeker. */
-export async function confirmCells(dateStr, cells) {
-  const redis = getRedis();
-  for (const c of cells) {
-    await redis.expire(cellKey(dateStr, c), CONFIRMED_TTL_SECONDS);
-  }
+/**
+ * Ödeme onaylandığında (veya ödeme gerekmediğinde) randevunun hücrelerini
+ * kalıcı hale getirir. Dönüş: başka bir randevuya ait olduğu için
+ * alınamayan hücre sayısı (0 = sorun yok).
+ */
+export async function confirmCells(dateStr, cells, bookingId) {
+  const keys = cells.map((c) => cellKey(dateStr, c));
+  return Number(await getRedis().eval(CONFIRM_OWNED_SCRIPT, keys, [bookingId, String(CONFIRMED_TTL_SECONDS)]));
+}
+
+/** Aynı randevunun eşzamanlı işlenmesini engelleyen kısa süreli kilit. */
+export async function acquireLock(name, ttlSeconds) {
+  return (await getRedis().set(`lock:${name}`, '1', { nx: true, ex: ttlSeconds })) === 'OK';
+}
+
+export async function releaseLock(name) {
+  await getRedis().del(`lock:${name}`);
+}
+
+// Takvim etkinliği oluşturulamayan randevular (bkz. google-calendar.js).
+const CALENDAR_RETRY_SET = 'randevu:calendar:retry';
+
+export async function markCalendarRetry(id) {
+  await getRedis().sadd(CALENDAR_RETRY_SET, id);
+}
+
+export async function clearCalendarRetry(id) {
+  await getRedis().srem(CALENDAR_RETRY_SET, id);
+}
+
+export async function listCalendarRetries() {
+  return (await getRedis().smembers(CALENDAR_RETRY_SET)) || [];
 }
 
 export async function saveBookingRecord(id, record) {

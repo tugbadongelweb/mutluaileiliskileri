@@ -98,7 +98,7 @@ export async function createPaytrPaymentUrl({
     user_phone: userPhone,
     merchant_ok_url: okUrl,
     merchant_fail_url: failUrl,
-    timeout_limit: '30',
+    timeout_limit: '20', // dakika; redis.js'teki HOLD_TTL_SECONDS (30 dk) bundan uzun olmalı
     currency,
     test_mode: testMode,
     lang: 'tr',

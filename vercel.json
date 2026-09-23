@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/cron/calendar-retry", "schedule": "0 6 * * *" }
+  ],
   "rewrites": [
     { "source": "/((?!api/|images/|robots\\.txt|sitemap\\.xml).*)", "destination": "/index.html" }
   ],
