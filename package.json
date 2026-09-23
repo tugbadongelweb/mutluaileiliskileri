@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Tuğba Döngel Aile Danışmanlığı — statik site + randevu API fonksiyonları",
   "dependencies": {
-    "@upstash/redis": "^1.34.3"
+    "@upstash/redis": "^1.34.3",
+    "googleapis": "^181.0.0"
   }
 }
