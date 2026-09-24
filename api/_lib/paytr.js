@@ -120,8 +120,10 @@ export async function createPaytrPaymentUrl({
 export function verifyPaytrCallback(fields) {
   const merchantKey = process.env.PAYTR_MERCHANT_KEY;
   const merchantSalt = process.env.PAYTR_MERCHANT_SALT;
+  if (!merchantKey || !merchantSalt) return false;
   const { merchant_oid, status, total_amount, hash } = fields;
-  if (!merchant_oid || !status || !total_amount || typeof hash !== 'string') return false;
+  if (typeof merchant_oid !== 'string' || !/^[0-9a-f]{32}$/.test(merchant_oid)) return false;
+  if (typeof status !== 'string' || typeof total_amount !== 'string' || !total_amount || typeof hash !== 'string') return false;
   const hashStr = merchant_oid + merchantSalt + status + total_amount;
   const expected = crypto.createHmac('sha256', merchantKey).update(hashStr).digest('base64');
   const expectedBuf = Buffer.from(expected);

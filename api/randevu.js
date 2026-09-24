@@ -14,6 +14,7 @@ import {
 import { isPaytrConfigured, priceForSessionType, createPaytrPaymentUrl } from './_lib/paytr.js';
 import { addBookingToCalendar, getGoogleBusyCells, describeGoogleError } from './_lib/google-calendar.js';
 import { notifyNewBooking } from './_lib/notify.js';
+import { SITE_URL } from './_lib/cancel.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NAME_MAX = 100;
@@ -40,9 +41,18 @@ export default async function handler(req, res) {
   }
   body = body || {};
 
-  const { date, time, sessionType, name, email, phone, kvkkOnay, onamOnay } = body;
+  const { kvkkOnay, onamOnay } = body;
+  // Yalnızca string kabul edilir (dizi/nesne ile doğrulamayı atlatmayı önler);
+  // kontrol karakterleri (satır sonu vb.) e-posta/takvim metnine sızmasın diye atılır.
+  const str = (v) => (typeof v === 'string' ? v.replace(/[\u0000-\u001f\u007f]/g, '') : '');
+  const date = str(body.date);
+  const time = str(body.time);
+  const sessionType = str(body.sessionType);
+  const name = str(body.name);
+  const email = str(body.email);
+  const phone = str(body.phone);
 
-  if (!SESSION_TYPES[sessionType]) {
+  if (!Object.hasOwn(SESSION_TYPES, sessionType)) {
     res.status(400).json({ ok: false, error: 'invalid_session_type' });
     return;
   }
@@ -63,7 +73,7 @@ export default async function handler(req, res) {
     res.status(400).json({ ok: false, error: 'invalid_email' });
     return;
   }
-  if (phone && String(phone).length > PHONE_MAX) {
+  if (phone && (phone.length > PHONE_MAX || !/^[0-9+()\-.\s]+$/.test(phone))) {
     res.status(400).json({ ok: false, error: 'invalid_phone' });
     return;
   }
@@ -126,7 +136,8 @@ export default async function handler(req, res) {
 
     const price = isPaytrConfigured() ? priceForSessionType(sessionType) : null;
     if (price) {
-      const origin = `https://${req.headers.host}`;
+      // Host başlığı istemci kontrolünde olabilir; dönüş adresleri sabit site adresinden üretilir.
+      const origin = SITE_URL;
       try {
         const paymentUrl = await createPaytrPaymentUrl({
           merchantOid: id,
@@ -145,8 +156,9 @@ export default async function handler(req, res) {
         res.status(200).json({ ok: true, id, paymentUrl });
         return;
       } catch (e) {
+        console.error('[randevu] PayTR token failed:', id, String(e && e.message || e));
         await releaseCells(date, cells, id);
-        res.status(502).json({ ok: false, error: 'paytr_error', message: String(e && e.message || e) });
+        res.status(502).json({ ok: false, error: 'paytr_error' });
         return;
       }
     }
@@ -162,6 +174,7 @@ export default async function handler(req, res) {
     if (reserved) {
       try { await releaseCells(date, cells, id); } catch {}
     }
-    res.status(500).json({ ok: false, error: 'server_error', message: String(e && e.message || e) });
+    console.error('[randevu]', id, String(e && e.message || e));
+    res.status(500).json({ ok: false, error: 'server_error' });
   }
 }

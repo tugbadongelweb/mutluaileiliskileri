@@ -220,9 +220,10 @@ export async function updateBookingRecord(id, patch) {
 export async function checkRateLimit(key, maxRequests, windowSeconds) {
   const redis = getRedis();
   const rk = `ratelimit:${key}`;
+  // Önce süreli anahtar oluşturulur, sonra artırılır (INCR süreyi korur).
+  // INCR + ayrı EXPIRE'da EXPIRE başarısız olursa anahtar süresiz kalıp
+  // o IP'yi kalıcı olarak engelleyebilirdi.
+  await redis.set(rk, 0, { nx: true, ex: windowSeconds });
   const count = await redis.incr(rk);
-  if (count === 1) {
-    await redis.expire(rk, windowSeconds);
-  }
   return { ok: count <= maxRequests, count };
 }
