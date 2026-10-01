@@ -2639,21 +2639,48 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
         <nav aria-label="Breadcrumb" style="font:400 13.5px/1 'Hanken Grotesk',sans-serif; color:#6D5E62; display:flex; gap:8px">
           <a href="#" onClick="{{ goWritings }}" style="color:#6D5E62">Yazılar</a><span>/</span><span style="color:#6D5E62">{{ art.cat }}</span>
         </nav>
-        <h1 style="font:400 clamp(30px,4.4vw,48px)/1.14 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; letter-spacing:-0.012em; margin:24px 0 0; text-wrap:pretty">{{ art.title }}</h1>
-        <p style="font:400 14px/1.5 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:16px 0 0">Aile Danışmanı Tuğba Döngel</p>
+        <h1 style="font:400 clamp(30px,4.4vw,48px)/1.14 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#7D112E; letter-spacing:-0.012em; margin:24px 0 0; text-wrap:pretty">{{ art.title }}</h1>
+        <p style="font:400 14px/1.5 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:16px 0 0">Yazar: <a href="/hakkimda" onClick="{{ goAbout }}" style="color:#7D112E; border-bottom:1px solid #E3C4CD; transition:border-color 300ms ease" style-hover="border-bottom-color:#7D112E">Aile Danışmanı Tuğba Döngel</a></p>
         {{ art.coverHero }}
-        <p style="font:400 clamp(18px,1.5vw,20px)/1.7 'Hanken Grotesk',sans-serif; color:#4B2330; margin:36px 0 0">{{ art.excerpt }}</p>
+        <sc-if value="{{ art.showLead }}" hint-placeholder-val="{{ true }}">
+          <p style="font:400 clamp(18px,1.5vw,20px)/1.7 'Hanken Grotesk',sans-serif; color:#4B2330; margin:36px 0 0">{{ art.excerpt }}</p>
+        </sc-if>
         <sc-for list="{{ art.body }}" as="p" hint-placeholder-count="3">
           <sc-if value="{{ p.isHeading }}" hint-placeholder-val="{{ false }}">
-            <h2 style="font:400 clamp(22px,2vw,27px)/1.32 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#4B2330; margin:40px 0 0; text-wrap:pretty">{{ p.text }}</h2>
+            <h2 style="font:400 clamp(22px,2vw,27px)/1.3 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#7D112E; margin:40px 0 0; text-wrap:pretty">{{ p.text }}</h2>
+          </sc-if>
+          <sc-if value="{{ p.isFaqHeading }}" hint-placeholder-val="{{ false }}">
+            <h2 style="font:400 clamp(22px,2vw,27px)/1.3 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#7D112E; margin:40px 0 0; text-wrap:pretty">{{ p.text }}</h2>
+          </sc-if>
+          <sc-if value="{{ p.isNumHeading }}" hint-placeholder-val="{{ false }}">
+            <h2 style="font:400 clamp(19px,1.6vw,22px)/1.35 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#7D112E; margin:36px 0 0; text-wrap:pretty">{{ p.text }}</h2>
+          </sc-if>
+          <sc-if value="{{ p.isH3 }}" hint-placeholder-val="{{ false }}">
+            <h3 style="font:400 clamp(19px,1.6vw,22px)/1.35 'Libre Caslon Text',serif; letter-spacing:-0.005em; color:#7D112E; margin:32px 0 0; text-wrap:pretty">{{ p.text }}</h3>
+          </sc-if>
+          <sc-if value="{{ p.isQuote }}" hint-placeholder-val="{{ false }}">
+            <p style="font:400 clamp(16px,1.25vw,17px)/1.55 'Libre Caslon Text',serif; color:#4B2330; margin:6px 0 0; padding-left:16px; border-left:1px solid #E3C4CD; text-wrap:pretty">{{ p.text }}</p>
+          </sc-if>
+          <sc-if value="{{ p.isNote }}" hint-placeholder-val="{{ false }}">
+            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.72 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:16px 0 0; padding:14px 18px; background:#F8F1EC; border-left:2px solid #7D112E; border-radius:0 8px 8px 0; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
           <sc-if value="{{ p.isBullet }}" hint-placeholder-val="{{ false }}">
-            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.85 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:10px 0 0 8px; text-wrap:pretty">{{ p.text }}</p>
+            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:6px 0 0 8px; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
           <sc-if value="{{ p.isPara }}" hint-placeholder-val="{{ true }}">
-            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.85 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:22px 0 0; text-wrap:pretty">{{ p.text }}</p>
+            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.72 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
         </sc-for>
+        <sc-if value="{{ art.hasFaq }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; margin-top:18px; border-top:1px solid #EFD5DC">
+            <sc-for list="{{ art.faqItems }}" as="f" hint-placeholder-count="4">
+              <details style="border-bottom:1px solid #EFD5DC; padding:0 0 4px">
+                <summary style="display:flex; align-items:center; justify-content:space-between; gap:20px; cursor:pointer; list-style:none; padding:18px 0; font:400 17.5px/1.45 'Libre Caslon Text',serif; color:#7D112E; text-wrap:pretty">{{ f.q }}<span aria-hidden="true" style="flex:none; display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7D112E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 9.5 12 15l5.5-5.5"></path></svg></span></summary>
+                <div style="margin:0 0 18px">{{ f.answer }}</div>
+              </details>
+            </sc-for>
+          </div>
+        </sc-if>
         <div style="margin-top:48px; padding-top:32px; border-top:1px solid #EFD5DC">
           <p style="font:400 17px/1.7 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0; max-width:52ch">İlişkinizde benzer bir döngüyü tanıdıysanız, bir ön görüşmede bunun nasıl işlediğine birlikte bakabiliriz.</p>
           <a href="#" onClick="{{ goContact }}" style="display:inline-block; font:600 15px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; padding:17px 30px; border-radius:8px; margin-top:22px" style-hover="background:#4B2330; color:#FFFFFF">Görüşme Planla</a>
@@ -3181,6 +3208,194 @@ class Component extends DCLogic {
         { p: "Güven, saygı ve duygusal yakınlık ancak iki tarafın da katıldığı bir süreç içerisinde yeniden şekillenebilir." },
         { p: "Süreci aktif dinleme, açık iletişim, gerçekçi beklentiler ve gerektiğinde profesyonel destekle değerlendirmek hem ilişkinizin durumunu hem de kendi ihtiyaçlarınızı daha net görmenize yardımcı olabilir." },
         { p: "Eğer eşiniz ayrılmak istediğini söylüyor ve aynı tartışmaların içerisinde tekrar tekrar kaldığınızı hissediyorsanız, yaşadığınız süreci ve ilişkinizin ihtiyaçlarını değerlendirmek için aile danışmanlığı desteği alabilirsiniz." }
+      ] },
+    { slug: "aile-danismanligi-nedir-kimler-basvurabilir", cat: "Aile Danışmanlığı", title: "Aile Danışmanlığı Nedir, Kimler Başvurabilir?",
+      excerpt: "Eşinizle aynı konuları tekrar tekrar konuşuyor ancak bir türlü çözüme ulaşamıyor musunuz? Aile içinde iletişim giderek zorlaşıyor, küçük meseleler büyük tartışmalara dönüşüyor ya da ilişkinizde eskiden olmayan bir uzaklık mı hissediyorsunuz?",
+      noLead: true,
+      image: "/images/yazi-aile-danismanligi-nedir.jpg",
+      body: [
+        {"p":"Eşinizle aynı konuları tekrar tekrar konuşuyor ancak bir türlü çözüme ulaşamıyor musunuz? Aile içinde iletişim giderek zorlaşıyor, küçük meseleler büyük tartışmalara dönüşüyor ya da ilişkinizde eskiden olmayan bir uzaklık mı hissediyorsunuz?"},
+        {"p":"Bu tür durumlarda aile danışmanlığı, yaşanan sorunlara farklı bir açıdan bakabilmek, ilişki içinde tekrar eden döngüleri fark etmek ve daha sağlıklı iletişim yolları geliştirebilmek için başvurulabilecek profesyonel destek alanlarından biridir."},
+        {"p":"Aile danışmanlığı sadece sorunlara da odaklanmaz. Çiftin başarılarını, sorun çözme becerilerini, daha önce benzer yada farklı sorunlarda nasıl çözüm bulduklarınıda tespit ederek çiftlerin güçlü yönlerini açığa kavuşturur."},
+        {"p":"Kültürel farklılığı derin olan çiftlerde otomatik davranışların ve bilişsel kabullerin birbirlerine tercümesini de yine aile danışmanı bir tercüman becerisinde gerçekleştirir."},
+        {"p":"Peki aile danışmanlığı nedir? Aile danışmanına kimler başvurabilir? Sadece boşanma noktasına gelen çiftler mi aile danışmanlığı alır?"},
+        {"p":"Hayır. Aile danışmanlığı yalnızca büyük krizler yaşandığında başvurulan bir süreç değildir."},
+        {"h":"Aile Danışmanlığı Nedir?"},
+        {"p":"Aile danışmanlığı; bireylerin, çiftlerin ve aile üyelerinin ilişkilerinde yaşadıkları sorunları ele almalarına, iletişimlerini geliştirmelerine ve karşılaştıkları problemlere daha işlevsel çözüm yolları oluşturmalarına destek olmayı amaçlayan bir danışmanlık sürecidir."},
+        {"p":"Aile danışmanlığında yalnızca “Kim haklı, kim haksız?” sorusuna bakılmaz."},
+        {"p":"Asıl amaç;"},
+        {"li":"ilişkide tekrar eden sorunları fark etmek,"},
+        {"li":"iletişim biçimlerini anlamak,"},
+        {"li":"çatışmaların altında yatan ihtiyaçları görmek,"},
+        {"li":"aile içerisindeki rolleri ve sınırları değerlendirmek,"},
+        {"li":"çiftin güçlü yönlerini fark etmek,"},
+        {"li":"daha sağlıklı iletişim ve problem çözme yolları geliştirmektir."},
+        {"p":"Aile danışmanlığı yalnızca sorun ortaya çıktığında devreye giren bir süreç değildir. İlişkinin güçlü yönlerini görmek, çiftin daha önce karşılaştığı sorunları nasıl çözdüğünü anlamak ve mevcut kaynaklarını daha etkili kullanabilmesini desteklemek de sürecin önemli parçalarındandır."},
+        {"h":"Aile Danışmanı Ne Yapar?"},
+        {"p":"Aile danışmanı, görüşmeler sırasında aile üyelerinin birbirleriyle kurduğu ilişkiyi, iletişim biçimlerini ve tekrar eden davranış kalıplarını anlamaya çalışır."},
+        {"p":"Örneğin çiftler arasında sürekli aynı tartışma yaşanıyorsa yalnızca son tartışmanın konusu değil, bu tartışmanın neden sürekli tekrar ettiği de ele alınır."},
+        {"p":"Bazen sorun para olabilir."},
+        {"p":"Bazen eşlerden birinin ailesi."},
+        {"p":"Bazen beklentiler."},
+        {"p":"Bazen de sorun gibi görünen konu yalnızca buzdağının görünen kısmıdır."},
+        {"p":"Aile danışmanlığı yalnızca sorunlara odaklanmaz. Çiftin geçmişte yaşadığı zorlukların üstesinden nasıl geldiğini, hangi problem çözme becerilerinin işe yaradığını ve ilişkinin güçlü taraflarını da değerlendirmeye dahil eder."},
+        {"p":"Çiftlerin sahip olduğu güçlü yönlerin fark edilmesi, sorunların yalnızca eksiklikler üzerinden değil, mevcut kaynaklar üzerinden de ele alınmasını sağlar."},
+        {"p":"Özellikle kültürel farklılıkların belirgin olduğu ilişkilerde tarafların davranışları, beklentileri ve bazı otomatik kabulleri birbirinden farklı olabilir."},
+        {"p":"Bir kişinin son derece normal gördüğü bir davranış, diğer kişi için bambaşka bir anlam taşıyabilir."},
+        {"p":"Bu tür durumlarda aile danışmanı, tarafların birbirlerinin dünyasını daha doğru anlayabilmesine yardımcı olan bir tür “tercüman” işlevi görebilir."},
+        {"p":"Amaç bir tarafın diğerine benzemesi değil; iki tarafın da kendi davranış ve düşünce biçimlerinin karşı tarafta nasıl algılandığını daha iyi fark edebilmesidir."},
+        {"h":"Kimler Aile Danışmanına Başvurabilir?"},
+        {"p":"Aile danışmanlığı yalnızca evli çiftlere yönelik değildir."},
+        {"p":"İlişkilerinde veya aile yaşamlarında güçlük yaşayan bireyler ve çiftler farklı nedenlerle aile danışmanlığına başvurabilir."},
+        {"h3":"1. Sürekli Tartışan Çiftler"},
+        {"p":"Aynı tartışmalar tekrar tekrar yaşanıyorsa ve konuşmalar bir çözüme ulaşmak yerine yeni kırgınlıklar oluşturuyorsa aile danışmanlığı ilişki dinamiğini değerlendirmek için bir alan sağlayabilir."},
+        {"q":"“Beni hiç anlamıyorsun.”"},
+        {"q":"“Ne söylesem yanlış anlıyorsun.”"},
+        {"q":"“Bu konuyu yüz kere konuştuk.”"},
+        {"p":"gibi cümleler ilişkinin günlük dilinin bir parçası haline geldiyse sorun çoğu zaman yalnızca tartışılan konu olmayabilir."},
+        {"p":"Çiftin nasıl tartıştığı, tartışmayı neyin başlattığı ve tarafların bu süreçte ne hissettiği de önemlidir."},
+        {"h3":"2. İletişimi Zayıflayan Eşler"},
+        {"p":"Bazı ilişkilerde büyük tartışmalar yaşanmaz."},
+        {"p":"Ancak çiftler zamanla birbirleriyle gerçek anlamda konuşmayı bırakabilir."},
+        {"p":"Günlük iletişim yalnızca;"},
+        {"q":"“Akşam kaçta geleceksin?”"},
+        {"q":"“Şunu hallettin mi?”"},
+        {"q":"“Hafta sonu ne yapacağız?”"},
+        {"p":"gibi günlük organizasyonlarla sınırlı kalabilir."},
+        {"p":"Duygusal paylaşım azaldığında çiftler aynı hayatı paylaşmalarına rağmen birbirlerinden uzaklaştıklarını hissedebilir."},
+        {"p":"Aile danışmanlığı bu iletişim biçiminin ne zaman ve neden değiştiğini değerlendirebilmek için bir alan oluşturabilir."},
+        {"h3":"3. Eşinin Ailesiyle Sorun Yaşayanlar"},
+        {"p":"Kayınvalide, kayınpeder veya diğer aile üyeleriyle yaşanan sınır problemleri çiftler arasında ciddi çatışmalara dönüşebilir."},
+        {"p":"Buradaki temel mesele her zaman yalnızca “kaynana problemi” değildir."},
+        {"p":"Asıl soru bazen şudur:"},
+        {"p":[{"b":"Çift, kendi ilişkisini dışarıdan gelen müdahalelere karşı nasıl koruyor?"}]},
+        {"p":"Eşlerden biri kendi ailesiyle sınır oluşturmakta zorlanıyorsa diğer eş kendisini ilişkinin dışında, değersiz veya yalnız hissedebilir."},
+        {"p":"Kök ailelerin ilişkiye müdahalesi arttıkça çiftin kendi sınırlarını oluşturması da zorlaşabilir."},
+        {"p":"Bu nedenle ailelerle yaşanan problemlerde yalnızca aile büyüklerinin davranışları değil, çiftin kendi arasındaki sınır ve dayanışma biçimi de değerlendirilir."},
+        {"h":"4. Güven Problemi Yaşayan Çiftler"},
+        {"p":"Kıskançlık, gizlilik, geçmişte yaşanan olaylar veya ilişkide güveni etkileyen davranışlar çiftlerin birbirine olan yaklaşımını değiştirebilir."},
+        {"p":"Güven bir kez zarar gördüğünde bazı ilişkilerde aşırı kontrolcü davranışlar, konuşulmuş ve üstü kapatılmış hataların tekrar tartışmaya açılması, bireysel gizliliği ihlal edebilecek kişisel verilerin elde edilmeye çalışılması ve gibi tedirgin edici davranışlar sorunu çözmez aksine körükler."},
+        {"p":"Bu süreçte yaşananların ilişki üzerindeki etkisini anlamak ve bundan sonraki sınırları konuşmak önemlidir."},
+        {"h":"5. Boşanmayı Düşünen Çiftler"},
+        {"p":"Aile danışmanlığı yalnızca ilişkiyi devam ettirmek isteyen çiftlerin başvurabileceği bir süreç değildir."},
+        {"p":"Boşanmayı düşünen veya karar verme aşamasında zorlanan bireyler ve çiftler de danışmanlık desteğine başvurabilir."},
+        {"p":"Bazen kişi;"},
+        {"q":"“Devam etmeli miyim?”"},
+        {"q":"“Ayrılmak doğru karar mı?”"},
+        {"q":"“Bu ilişkiyi gerçekten bitirmek mi istiyorum?”"},
+        {"p":"gibi sorular arasında sıkışmış hissedebilir."},
+        {"p":"Amaç kişinin yerine karar vermek değildir."},
+        {"p":"Danışmanlık süreci kişinin yaşadığı ilişkiyi, beklentilerini, ihtiyaçlarını ve kararını etkileyen faktörleri daha açık biçimde değerlendirebilmesine yardımcı olabilir."},
+        {"h3":"Boşanma Sürecinde Yaşanan Kayıp ve Yas"},
+        {"p":"Bir ilişkinin sona ermesi yalnızca eşten ayrılmak anlamına gelmeyebilir."},
+        {"p":"Kişi aynı zamanda birlikte kurduğu gelecek planını, alışkanlıklarını, ortak çevresini ve hayatında yıllardır var olan bir düzeni de kaybedebilir."},
+        {"p":"Bu nedenle boşanma süreci bazı kişiler için bir yas sürecine benzer şekilde yaşanabilir."},
+        {"p":"Üzüntü, öfke, suçluluk, rahatlama, korku ve belirsizlik aynı dönemde bir arada hissedilebilir."},
+        {"p":"Bu süreçte kişinin yaşadıklarını anlamlandırabilmesi ve hayatının yeni dönemine hazırlanabilmesi önemlidir."},
+        {"h":"6. Evlilik Öncesinde İlişkisini Değerlendirmek İsteyen Çiftler"},
+        {"p":"Aile danışmanına başvurmak için mutlaka ilişkide ciddi bir sorun olması gerekmez."},
+        {"p":"Evlilik öncesindeki çiftler;"},
+        {"li":"ortak gelecek beklentileri,"},
+        {"li":"maddi konular,"},
+        {"li":"çocuk sahibi olma düşüncesi,"},
+        {"li":"kültürel farklılıkların oluşturabileceği riskler,"},
+        {"li":"ailelerle ilişkiler,"},
+        {"li":"ilişkideki roller,"},
+        {"li":"ev içerisindeki sorumluluklar,"},
+        {"li":"kişisel sınırlar,"},
+        {"li":"kök ailelerin ilişkiye müdahalesi"},
+        {"p":"gibi ilerleyen dönemde çatışma yaratabilecek konuları evlilik öncesinde değerlendirmek amacıyla danışmanlık alabilir."},
+        {"p":"Burada amaç “sorun bulmak” değildir."},
+        {"p":"Tam tersine çiftin geleceğe yönelik beklentilerini birbirine daha açık biçimde ifade edebilmesini ve farklılıkların önceden konuşulabilmesini sağlamaktır."},
+        {"h":"7. İlişkisinde Duygusal Uzaklık Hissedenler"},
+        {"q":"“Eskisi gibi değiliz.”"},
+        {"p":"Bu cümle birçok ilişkinin önemli bir dönemini anlatabilir."},
+        {"p":"Bazen ortada büyük bir kriz yoktur ancak yakınlık giderek azalır."},
+        {"p":"Çiftler birbirlerinden uzaklaştığını hissedebilir fakat bunun ne zaman başladığını veya neden olduğunu tam olarak açıklayamayabilir."},
+        {"p":"Aile danışmanlığı, ilişkinin ne zaman ve nasıl değişmeye başladığını değerlendirmek için kullanılabilir."},
+        {"h":"Çocuklarla İlgili Danışmanlık Veriliyor mu?"},
+        {"p":"Aile danışmanlığı alanında ebeveynlik, çocuk yetiştirme ve aile içindeki çocuklarla ilgili konular çalışılabilmektedir."},
+        {"note":["Ancak ",{"b":"Tuğba Döngel tarafından çocuklara yönelik danışmanlık hizmeti verilmemektedir."}]},
+        {"p":"Doğrudan çocukla ilgili değerlendirme veya danışmanlık ihtiyacı bulunan durumlarda bu alanda çalışan uygun bir uzmana başvurulması önerilir."},
+        {"h":"Cinsel Konularla İlgili Danışmanlık Veriliyor mu?"},
+        {"p":"Cinsellik ve çift ilişkisiyle bağlantılı konular aile danışmanlığı süreçlerinde ele alınabilen alanlardan biridir."},
+        {"note":["Ancak ",{"b":"Tuğba Döngel tarafından cinsel konulara yönelik danışmanlık hizmeti verilmemektedir."}]},
+        {"p":"Bu alanda destek ihtiyacı bulunan kişilerin ilgili alanda uzmanlaşmış profesyonellere başvurması daha uygun olacaktır."},
+        {"h":"Aile Danışmanlığına Başvurmak İçin İlişkinin Çok Kötü Olması Gerekir mi?"},
+        {"p":"Hayır."},
+        {"p":"Aile danışmanlığı konusunda en yaygın yanlış inanışlardan biri, danışmanlığa yalnızca ilişki tamamen çıkmaza girdiğinde başvurulması gerektiğidir."},
+        {"p":"Oysa danışmanlık yalnızca kriz çözmek için kullanılmaz."},
+        {"p":"Çiftin ilişkisinde iyi çalışan alanları fark etmesi, güçlü yönlerini geliştirmesi ve gelecekte oluşabilecek sorunlara karşı daha etkili problem çözme yolları oluşturması için de başvurulabilir."},
+        {"p":"Bir ilişkinin yardım istemek için mutlaka boşanma noktasına gelmesi gerekmez."},
+        {"h":"Eşlerden Biri Gelmek İstemiyorsa Aile Danışmanlığı Alınabilir mi?"},
+        {"p":"Evet."},
+        {"p":"İlişkide yaşanan problemler iki kişiyi ilgilendirse bile danışmanlık sürecine başlamak için her zaman iki tarafın aynı anda hazır olması mümkün olmayabilir."},
+        {"p":"Eşlerden biri görüşmeye katılmak istemiyorsa diğer kişi kendi iletişim biçimini, sınırlarını, beklentilerini ve yaşadığı ilişki döngüsünü değerlendirmek amacıyla bireysel görüşmelere katılabilir."},
+        {"h":"Aile Danışmanı Bireysel Danışmanlık Verir mi?"},
+        {"p":"Evet."},
+        {"p":"Aile danışmanlığı yalnızca çiftlerin birlikte katıldığı görüşmelerden oluşmaz."},
+        {"p":"Bireyin içinde bulunduğu ilişki sistemi, sosyal çevresi ve aile ilişkileri dikkate alınarak bireysel görüşmeler de gerçekleştirilebilir."},
+        {"p":"Bazen yaşanan problem çift ilişkisiyle bağlantılı olsa bile kişinin önce kendi düşüncelerini, duygularını, sınırlarını ve beklentilerini anlaması gerekebilir."},
+        {"p":"Bu nedenle bireysel görüşmeler de aile danışmanlığı sürecinin bir parçası olabilir."},
+        {"h":"Aile Danışmanlığı Kaç Seans Sürer?"},
+        {"p":"Aile danışmanlığı sürecinin uzunluğu herkes için aynı değildir."},
+        {"p":"Görüşme sayısını;"},
+        {"li":"yaşanan problemin niteliği,"},
+        {"li":"problemin ne kadar süredir devam ettiği,"},
+        {"li":"tarafların sürece katılımı,"},
+        {"li":"görüşmeler sırasında ortaya çıkan ihtiyaçlar,"},
+        {"li":"belirlenen hedefler"},
+        {"p":"gibi birçok faktör etkileyebilir."},
+        {"p":"Bu nedenle herkes için geçerli sabit bir görüşme sayısından söz etmek doğru değildir."},
+        {"h":"Aile Danışmanlığı ile Çift Terapisi Aynı Şey midir?"},
+        {"p":"Bu kavramlar günlük kullanımda zaman zaman birbirinin yerine kullanılsa da aynı mesleki kapsamı ifade etmek zorunda değildir."},
+        {"p":"Aile danışmanlığı; aile sistemi, çift ilişkileri, iletişim, sınırlar, roller ve problem çözme süreçleri üzerine danışmanlık çalışmaları yürütür."},
+        {"p":"Ruhsal bozuklukların tanı ve tedavisi ise ilgili sağlık profesyonellerinin çalışma alanına girer."},
+        {"p":"Bu nedenle destek alınacak uzmanın eğitimini, çalışma alanını ve sunduğu hizmetin kapsamını bilmek önemlidir."},
+        {"h":"Aile Danışmanına Ne Zaman Gitmeliyim?"},
+        {"p":"Bunun için tek bir doğru zaman yoktur."},
+        {"p":"Ancak şu sorulardan birkaçına “evet” cevabı veriyorsanız ilişkinizi bir aile danışmanı eşliğinde değerlendirmeyi düşünebilirsiniz:"},
+        {"li":"Sürekli aynı konularda mı tartışıyorsunuz?"},
+        {"li":"Tartışmalarınız giderek daha kırıcı hale mi geliyor?"},
+        {"li":"Eşiniz tarafından anlaşılmadığınızı mı düşünüyorsunuz?"},
+        {"li":"Eşinizin ailesinin ilişkinize müdahalesi sizi zorluyor mu?"},
+        {"li":"Aranızdaki güven azaldı mı?"},
+        {"li":"Birbirinizle konuşmaktan kaçınıyor musunuz?"},
+        {"li":"İlişkinizde giderek artan bir duygusal uzaklık mı hissediyorsunuz?"},
+        {"li":"Kültürel veya ailevi farklılıklar ilişkinizde sürekli sorun mu yaratıyor?"},
+        {"li":"Ayrılmayı düşünüyor ancak karar vermekte zorlanıyor musunuz?"},
+        {"li":"Boşanma sürecinde bocalıyor ve sizin için doğru kararı daha sağlıklı değerlendirmek mi istiyorsunuz?"},
+        {"li":"Boşanma sonrasında yaşadığınız kayıp ve değişimle baş etmekte zorlanıyor musunuz?"},
+        {"p":"Bu soruların amacı ilişkiniz hakkında bir teşhis koymak değildir."},
+        {"p":"Ancak ilişkinizde üzerinde durulması gereken alanları fark etmenize yardımcı olabilir."},
+        {"h":"Sorun Her Zaman “Diğer Kişi” Değildir"},
+        {"p":"İlişkilerde yaşanan problemlerde insanlar çoğu zaman karşı tarafın değişmesini bekler."},
+        {"q":"“Eşim değişirse her şey düzelecek.”"},
+        {"q":"“Annesine sınır koysa sorun kalmayacak.”"},
+        {"q":"“Beni biraz dinlese tartışmayacağız.”"},
+        {"p":"Fakat ilişkiler iki kişinin oluşturduğu bir sistemdir."},
+        {"p":"Bu nedenle yalnızca bir kişinin davranışına değil, çiftin birlikte oluşturduğu ilişki döngüsüne bakmak gerekir."},
+        {"p":"Bazen değişmesi gereken şey kişilerden biri değil, birbirleriyle kurdukları iletişim biçimidir."},
+        {"p":"Aynı zamanda her ilişki yalnızca sorunlardan oluşmaz."},
+        {"p":"Çiftin daha önce birlikte aştığı zorluklar, birbirlerine destek olduğu dönemler ve işe yarayan problem çözme biçimleri de ilişkinin önemli kaynaklarıdır."},
+        {"h":"Aile Danışmanlığı İçin İlk Adımı Atmak"},
+        {"p":"İlişkinizde yaşadığınız her problemi kendi başınıza çözmek zorunda değilsiniz."},
+        {"p":"Bazen tarafsız ve yapılandırılmış bir bakış açısı, uzun süredir tekrar eden bir konuyu farklı biçimde görmenize yardımcı olabilir."},
+        {"p":"Aile danışmanlığının amacı kusursuz bir ilişki oluşturmak değildir."},
+        {"p":"Amaç, yaşadığınız ilişkiyi daha iyi anlamanız, tekrar eden döngüleri fark etmeniz, güçlü yönlerinizi görmeniz ve ihtiyaç duyduğunuz değişim alanlarını belirleyebilmeniz için destek sağlamaktır."},
+        {"p":"Tuğba Döngel ile aile danışmanlığı süreci hakkında bilgi almak ve size uygun görüşme seçeneklerini değerlendirmek için randevu oluşturabilirsiniz."},
+        {"h":"Sık Sorulan Sorular","faqHeading":true}
+      ],
+      faq: [
+        {"q":"Aile danışmanlığı nedir?","a":["Aile danışmanlığı; bireylerin ve çiftlerin ilişkilerinde yaşadıkları iletişim, çatışma, sınır, güven ve problem çözme konularını ele alan profesyonel bir danışmanlık sürecidir."]},
+        {"q":"Aile danışmanına kimler başvurabilir?","a":["İlişkisinde iletişim sorunları yaşayan çiftler, aile içi çatışma yaşayan bireyler, güven problemleri yaşayan çiftler, evlilik öncesi ilişkisini değerlendirmek isteyenler ve boşanma sürecindeki bireyler aile danışmanlığına başvurabilir.","Tuğba Döngel tarafından çocuklara yönelik danışmanlık hizmeti verilmemektedir."]},
+        {"q":"Aile danışmanlığına tek başına gidilir mi?","a":["Evet. Eşlerin mutlaka birlikte başvurması gerekmez. Kişi kendi ilişki dinamiklerini, iletişim biçimini, sınırlarını ve yaşadığı problemleri değerlendirmek amacıyla bireysel olarak da danışmanlık sürecine başlayabilir."]},
+        {"q":"Aile danışmanı bireysel danışmanlık verir mi?","a":["Evet. Bireyin aile ilişkileri, sosyal çevresi ve içinde bulunduğu ilişki sistemi dikkate alınarak bireysel görüşmeler gerçekleştirilebilir."]},
+        {"q":"Aile danışmanlığı sadece evli çiftler için midir?","a":["Hayır. Evli çiftlerin yanı sıra evlilik hazırlığındaki çiftler, boşanma sürecindeki bireyler ve aile veya ilişki yaşamıyla ilgili konuları değerlendirmek isteyen kişiler de aile danışmanlığına başvurabilir."]},
+        {"q":"Aile danışmanlığı boşanmayı engeller mi?","a":["Aile danışmanlığının amacı kişileri ilişkiyi sürdürmeye veya sonlandırmaya yönlendirmek değildir.","Süreç, kişinin veya çiftin yaşadığı ilişkiyi, beklentilerini ve kararını etkileyen unsurları daha sağlıklı biçimde değerlendirebilmesine yardımcı olmayı amaçlar."]},
+        {"q":"Çocuklar için danışmanlık veriliyor mu?","a":["Tuğba Döngel tarafından doğrudan çocuklara yönelik danışmanlık hizmeti verilmemektedir. Çocuklarla ilgili profesyonel destek ihtiyacında bu alanda çalışan uygun bir uzmana başvurulmalıdır."]},
+        {"q":"Cinsel konularla ilgili danışmanlık veriliyor mu?","a":["Tuğba Döngel tarafından cinsel konulara yönelik danışmanlık hizmeti verilmemektedir. Bu alanda destek ihtiyacı bulunan kişilerin ilgili alanda uzmanlaşmış bir profesyonele başvurması önerilir."]},
+        {"q":"Ne zaman aile danışmanına gidilmeli?","a":["Sürekli tekrarlanan tartışmalar, iletişim problemleri, güven sorunları, ailelerin ilişkiye müdahalesi, kültürel farklılıklardan kaynaklanan çatışmalar, duygusal uzaklaşma veya boşanma kararında yaşanan kararsızlık gibi durumlarda aile danışmanlığı değerlendirilebilir."]}
       ] }
   ];
 
@@ -3337,7 +3552,7 @@ class Component extends DCLogic {
       description: a.excerpt,
       url: url,
       mainEntityOfPage: url,
-      image: this.SITE.baseUrl + '/' + a.image,
+      image: a.image ? this.SITE.baseUrl + '/' + a.image.replace(/^\//, '') : undefined,
       inLanguage: 'tr',
       author: { '@type': 'Person', name: 'Tuğba Döngel', jobTitle: 'Aile Danışmanı' },
       publisher: { '@type': 'Organization', name: 'Tuğba Döngel — Aile Danışmanlığı' }
@@ -3460,19 +3675,35 @@ class Component extends DCLogic {
     const cats = ['Tümü'].concat(this.ARTICLES.map(a => a.cat).filter((c, i, arr) => arr.indexOf(c) === i));
     const cover = (a, ratio, extra) => a.image ? React.createElement('img', { src: a.image, alt: a.title, style: Object.assign({ display: 'block', width: '100%', aspectRatio: ratio, objectFit: 'cover', background: '#E9D7DB' }, extra || {}) }) : null;
     const embedded = (typeof window !== 'undefined' && window.ARTICLE_IMAGES) || {};
+    // Rich text: a string, or an array of strings / { b: '...' } (bold) segments.
+    const rich = (v) => Array.isArray(v)
+      ? React.createElement(React.Fragment, null, ...v.map((seg, k) => typeof seg === 'string' ? seg : React.createElement('strong', { key: k, style: { fontWeight: 600, color: '#4B2330' } }, seg.b)))
+      : v;
+    const plain = (v) => Array.isArray(v) ? v.map((seg) => typeof seg === 'string' ? seg : seg.b).join('') : (v || '');
+    const blockKinds = { isHeading: false, isNumHeading: false, isFaqHeading: false, isH3: false, isPara: false, isBullet: false, isQuote: false, isNote: false };
     const bodyItems = (list) => (list || []).map((b) => b.h
-      ? { text: b.h, isHeading: true, isPara: false, isBullet: false }
+      ? Object.assign({}, blockKinds, b.faqHeading ? { text: b.h, isFaqHeading: true } : /^\d+\.\s/.test(b.h) ? { text: b.h, isNumHeading: true } : { text: b.h, isHeading: true })
+      : b.h3
+      ? Object.assign({}, blockKinds, { text: b.h3, isH3: true })
       : b.li
-      ? { text: '– ' + b.li, isHeading: false, isPara: false, isBullet: true }
-      : { text: b.p, isHeading: false, isPara: true, isBullet: false });
+      ? Object.assign({}, blockKinds, { text: '– ' + b.li, isBullet: true })
+      : b.q
+      ? Object.assign({}, blockKinds, { text: b.q, isQuote: true })
+      : b.note
+      ? Object.assign({}, blockKinds, { text: rich(b.note), isNote: true })
+      : Object.assign({}, blockKinds, { text: rich(b.p), isPara: true }));
+    const faqAnswer = (paras) => React.createElement(React.Fragment, null, ...(paras || []).map((t, k) => React.createElement('p', { key: k, style: { font: "400 clamp(16px,1.25vw,17px)/1.7 'Hanken Grotesk',sans-serif", color: '#6D5E62', margin: k ? '10px 0 0' : '0', maxWidth: '66ch', textWrap: 'pretty' } }, t)));
     const articles = this.ARTICLES.map((a0, i) => { const a = Object.assign({}, a0, { image: embedded[a0.image] || a0.image }); return Object.assign({}, a, {
       go: this.go('article', { art: i }),
       body: bodyItems(a0.body),
+      showLead: !a0.noLead,
+      hasFaq: !!(a0.faq && a0.faq.length),
+      faqItems: (a0.faq || []).map((f) => ({ q: f.q, answer: faqAnswer(f.a) })),
       coverHome: cover(a, '4/3'),
       coverGrid: cover(a, '3/2', { border: '1px solid #E9D7DB', borderRadius: '8px' }),
       coverHero: cover(a, '16/9', { marginTop: '32px', border: '1px solid #E9D7DB', borderRadius: '8px' }),
       coverWide: cover(a, '16/11'),
-      readTime: Math.max(1, Math.round((a0.body || []).reduce((n, b) => n + ((b.h || b.p || b.li || '').split(/\s+/).filter(Boolean).length), 0) / 200))
+      readTime: Math.max(1, Math.round((a0.body || []).reduce((n, b) => n + plain(b.h || b.h3 || b.p || b.li || b.q || b.note).split(/\s+/).filter(Boolean).length, 0) / 200))
     }); });
     const headlines = {
       'Bazen sorun sevgisizlik değil, birbirimizi duyamamaktır.': 1,
