@@ -11,6 +11,31 @@
   gtag('js', new Date());
 
   gtag('config', 'G-7ZZ28KL3T0');
+
+  // Dönüşüm takibi. Önemli etkinlikler (GA4'te işaretli): generate_lead, booking_paid, contact_email.
+  // Kişisel veri (ad, e-posta, telefon) gönderilmez.
+  window.trackEvent = function (name, params) {
+    try { gtag('event', name, params || {}); } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('mailto:') === 0) window.trackEvent('contact_email');
+    else if (/instagram\.com/i.test(href)) window.trackEvent('social_click', { platform: 'instagram' });
+    else if (/youtube\.com/i.test(href)) window.trackEvent('social_click', { platform: 'youtube' });
+  }, true);
+  // PayTR dönüşü: /?page=contact&randevu=odendi | basarisiz
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var r = params.get('randevu');
+    if (r !== 'odendi' && r !== 'basarisiz') return;
+    window.trackEvent(r === 'odendi' ? 'booking_paid' : 'booking_payment_failed');
+    // Sayfa yenilenince tekrar sayılmasın.
+    params.delete('randevu');
+    var qs = params.toString();
+    window.history.replaceState(window.history.state, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
+  })();
 </script>
 <script>
 // Production static export: prevents the dc-runtime editor/hot-reload path
@@ -2720,7 +2745,12 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
               <sc-for list="{{ contactRows }}" as="r" hint-placeholder-count="6">
                 <li style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px; padding:16px 0; border-bottom:1px solid #EFD5DC">
                   <span style="font:500 11.5px/1.6 'Hanken Grotesk',sans-serif; letter-spacing:0.14em; text-transform:uppercase; color:#6D5E62">{{ r.label }}</span>
-                  <span style="font:400 15.5px/1.6 'Hanken Grotesk',sans-serif; color:#4B2330; text-align:right">{{ r.value }}</span>
+                  <sc-if value="{{ r.href }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ r.href }}" style="font:400 15.5px/1.6 'Hanken Grotesk',sans-serif; color:#4B2330; text-align:right; text-decoration:underline; text-underline-offset:3px; text-decoration-color:#EFD5DC" style-hover="color:#7D112E">{{ r.value }}</a>
+                  </sc-if>
+                  <sc-if value="{{ r.plain }}" hint-placeholder-val="{{ true }}">
+                    <span style="font:400 15.5px/1.6 'Hanken Grotesk',sans-serif; color:#4B2330; text-align:right">{{ r.value }}</span>
+                  </sc-if>
                 </li>
               </sc-for>
             </ul>
@@ -2917,7 +2947,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
         </div>
         <div>
           <p style="font: 500 10.5px/1.4 'Hanken Grotesk',sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: #2A5A55; margin: 0 0 18px">İletişim</p>
-          <p style="font:400 14px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">{{ site.email }}</p>
+          <p style="font:400 14px/1.75 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0"><a href="mailto:{{ site.email }}" style="color:inherit; text-decoration:none" style-hover="color:#7D112E">{{ site.email }}</a></p>
           <sc-if value="{{ showInstagram }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:18px">
               <a href="https://www.instagram.com/ailedanismanitugbadongel/" target="_blank" rel="noopener" style="font:500 13px/1 'Hanken Grotesk',sans-serif; color:#7D112E">Instagram</a>
@@ -3622,6 +3652,7 @@ class Component extends DCLogic {
 
   async fetchSlots(dateStr) {
     this.setState({ bDate: dateStr, bTime: '', bSlots: null, bLoadingSlots: true, bError: '' });
+    if (window.trackEvent) window.trackEvent('booking_date_select', { session_type: this.state.bType });
     this.scrollTimesIntoView();
     try {
       const res = await fetch('/api/musaitlik?date=' + encodeURIComponent(dateStr));
@@ -3657,9 +3688,18 @@ class Component extends DCLogic {
         }
         throw new Error(data.error || 'unknown');
       }
-      if (data.paymentUrl) { window.location.href = data.paymentUrl; return; }
+      if (data.paymentUrl) {
+        // Ödeme sayfasına geçmeden önce etkinliğin gönderilmesini bekle (en fazla 1,2 sn).
+        let left = false;
+        const leave = () => { if (!left) { left = true; window.location.href = data.paymentUrl; } };
+        if (window.trackEvent) window.trackEvent('generate_lead', { session_type: st.bType, payment_required: true, event_callback: leave, event_timeout: 1200 });
+        setTimeout(leave, 1200);
+        return;
+      }
+      if (window.trackEvent) window.trackEvent('generate_lead', { session_type: st.bType, payment_required: false });
       this.setState({ bSubmitting: false, bStep: 4, bResult: data });
     } catch (e) {
+      if (window.trackEvent) window.trackEvent('booking_error', { session_type: st.bType, error_code: String((e && e.message) || 'unknown').slice(0, 40) });
       this.setState({ bSubmitting: false, bError: 'Randevu oluşturulurken bir sorun oluştu. Lütfen tekrar deneyin veya e-posta üzerinden ulaşın.' });
     }
   }
@@ -3835,8 +3875,8 @@ class Component extends DCLogic {
       }),
       site: this.SITE,
       contactRows: [
-        { label: 'E-posta', value: this.SITE.email },
-        { label: 'Görüşme biçimi', value: 'Yalnızca online · Dünyanın her yerinden' }
+        { label: 'E-posta', value: this.SITE.email, href: 'mailto:' + this.SITE.email, plain: false },
+        { label: 'Görüşme biçimi', value: 'Yalnızca online · Dünyanın her yerinden', href: '', plain: true }
       ],
       bookingOpen: this.BOOKING_ENABLED,
       bookingClosed: !this.BOOKING_ENABLED,
@@ -3863,7 +3903,7 @@ class Component extends DCLogic {
       sessionTypes: this.BOOKING_TYPES.map(t => ({
         key: t.key, label: t.label, minutes: t.minutes,
         sub: t.minutes + ' dakika' + (t.note ? ' · ' + t.note : ''),
-        go: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bType: t.key, bStep: 2, bDate: '', bTime: '', bSlots: null, bError: '', bCalMonth: 0 }); }
+        go: (e) => { if (e && e.preventDefault) e.preventDefault(); if (window.trackEvent) window.trackEvent('booking_start', { session_type: t.key }); this.setState({ bType: t.key, bStep: 2, bDate: '', bTime: '', bSlots: null, bError: '', bCalMonth: 0 }); }
       })),
       bCalMonthLabel: (() => {
         const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -3912,7 +3952,7 @@ class Component extends DCLogic {
           if (ok) { for (let k = 0; k < need; k++) { if (occupied.has(this.WORK_HOURS[i + k])) { ok = false; break; } } }
           return {
             time: h, available: ok, unavailable: !ok,
-            go: ok ? ((e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ bTime: h, bStep: 3, bError: '' }); }) : null
+            go: ok ? ((e) => { if (e && e.preventDefault) e.preventDefault(); if (window.trackEvent) window.trackEvent('booking_time_select', { session_type: this.state.bType }); this.setState({ bTime: h, bStep: 3, bError: '' }); }) : null
           };
         });
       })(),
