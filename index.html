@@ -2690,6 +2690,9 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
           <sc-if value="{{ p.isQuote }}" hint-placeholder-val="{{ false }}">
             <p style="font:400 clamp(16px,1.25vw,17px)/1.55 'Libre Caslon Text',serif; color:#4B2330; margin:6px 0 0; padding-left:16px; border-left:1px solid #E3C4CD; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
+          <sc-if value="{{ p.isLeadQuote }}" hint-placeholder-val="{{ false }}">
+            <p style="font:400 clamp(16px,1.25vw,17px)/1.55 'Libre Caslon Text',serif; color:#4B2330; margin:36px 0 0; padding-left:16px; border-left:1px solid #E3C4CD; text-wrap:pretty">{{ p.text }}</p>
+          </sc-if>
           <sc-if value="{{ p.isNote }}" hint-placeholder-val="{{ false }}">
             <p style="font:400 clamp(17px,1.35vw,18.5px)/1.72 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:16px 0 0; padding:14px 18px; background:#F8F1EC; border-left:2px solid #7D112E; border-radius:0 8px 8px 0; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
@@ -3938,6 +3941,117 @@ class Component extends DCLogic {
         {"h": "Amaç Taraf Seçmek Değil, İlişkide Yalnız Bırakmamaktır"},
         {"p": "Bir eşin annesinin niyetini anlamaya çalışması yanlış değildir. Ancak aynı merak ve hassasiyet kendi eşinin duygularına da gösterilmelidir. Çünkü evlilikte güven veren şey yalnızca “bana güven” demek değil; zor bir durumda eşinin deneyimini ciddiye alabilmek ve gerektiğinde ortak sınırları birlikte koruyabilmektir."},
         {"p": "Tuğba Döngel ile çift ve aile danışmanlığı süreci hakkında bilgi almak ve kök ailelerle yaşanan sınır sorunlarını değerlendirmek için görüşme planlayabilirsiniz."}
+      ] },
+    { slug: "bosanmadan-once-cift-danismanligi-fark-yaratir-mi", cat: "Çift Danışmanlığı", title: "Boşanmadan Önce Çift Danışmanlığı Fark Yaratır mı?",
+      seoTitle: "Boşanmadan Önce Çift Danışmanlığı Fark Yaratır mı? | Tuğba Döngel",
+      metaDesc: "Boşanmadan önce çift danışmanlığı işe yarar mı? Karar verme, iletişim, tekrar eden sorunlar ve ayrılık sürecini daha sağlıklı yönetme açısından çift danışmanlığının nasıl katkı sağlayabileceğini öğrenin.",
+      excerpt: "Boşanma düşüncesi ortaya çıktığında çiftler çoğu zaman iki uç arasında sıkışır: Ya ilişkiyi ne pahasına olursa olsun sürdürmek ya da mümkün olan en kısa sürede bitirmek.",
+      noLead: true,
+      image: "/images/yazi-bosanmadan-once-cift-danismanligi.jpg",
+      imageAlt: "Boşanmadan önce ilişkilerini ve geleceklerini değerlendiren bir çift",
+      body: [
+        {"q": "“Ayrılmak istiyorum ama doğru karar mı emin değilim.”"},
+        {"p": "Boşanma düşüncesi ortaya çıktığında çiftler çoğu zaman iki uç arasında sıkışır: Ya ilişkiyi ne pahasına olursa olsun sürdürmek ya da mümkün olan en kısa sürede bitirmek."},
+        {"p": "Oysa bazı çiftler için karar vermeden önce ilişkide neyin tükendiğini, neyin hala korunabildiğini ve sorunların gerçekten değişip değişemeyeceğini değerlendirmek önemli olabilir."},
+        {"p": "Çift danışmanlığı burada “Evliliği kurtarma zorunluluğu” anlamına gelmez. Amaç, çiftin ilişkiyi ve kararlarını daha açık biçimde görebileceği bir alan oluşturmaktır."},
+        {"h": "Boşanmadan Önce Çift Danışmanlığı Ne Sağlayabilir?"},
+        {"p": [{"a": "Çift danışmanlığı", "href": "/yazilar/cift-danismanligina-ne-zaman-gidilmeli"}, ", boşanma kararı öncesinde şu alanların daha net görülmesine yardımcı olabilir:"]},
+        {"li": "Sorunların geçici mi yoksa uzun süredir devam eden bir döngü mü olduğunu anlamak,"},
+        {"li": "Çiftin hangi konularda hala ortak zemin bulabildiğini görmek,"},
+        {"li": "İlişkiyi yoran iletişim ve çatışma biçimlerini fark etmek,"},
+        {"li": "Değişim isteğinin iki tarafta da olup olmadığını değerlendirmek,"},
+        {"li": "Ayrılık düşüncesinin öfke anının sonucu mu yoksa kalıcı bir karar mı olduğunu anlamak,"},
+        {"li": "Karar verilirken yalnızca korku veya suçlulukla hareket edilip edilmediğini fark etmek."},
+        {"h": "Çift Danışmanlığı Boşanmayı Engeller mi?"},
+        {"p": "Hayır. Çift danışmanlığının amacı her evliliği devam ettirmek değildir."},
+        {"p": "Bazı çiftler görüşmeler sonunda ilişkiyi sürdürmeye karar verebilir. Bazı çiftler ise ayrılığın kendileri için daha doğru bir seçenek olduğunu daha net görebilir."},
+        {"p": "Danışmanlığın görevi çift adına karar vermek değil, çiftin kararını daha bilinçli değerlendirmesine destek olmaktır."},
+        {"h3": "1. Aynı Sorunları Yıllardır Tekrar Ediyorsanız"},
+        {"p": "Bir ilişkiyi bitirmeyi düşünmeden önce şu soru önemli olabilir: Sorun gerçekten çözülemez mi, yoksa çift aynı yöntemleri tekrar tekrar denediği için mi çözülmüyor?"},
+        {"p": "Aynı tartışma döngüsünün görünür hale gelmesi bazen çiftin farklı davranışlar denemesine alan açabilir."},
+        {"h3": "2. Tartışmalar Artık Her Konuya Yayılıyorsa"},
+        {"p": "Başlangıçta tek bir konu olan sorun zamanla para, aileler, günlük sorumluluklar ve geçmiş kırgınlıkların tamamına yayılabilir."},
+        {"p": "Bu durumda çiftin yalnızca son kavgasına değil, aralarındaki genel iletişim biçimine bakmak gerekir."},
+        {"h3": "3. Duygusal Uzaklık Uzun Süredir Devam Ediyorsa"},
+        {"p": "Bazı çiftler çok kavga etmez ama zamanla birbirleriyle paylaşmayı, yakınlık kurmayı ve birlikte zaman geçirmek istemeyi bırakır."},
+        {"p": "Bu uzaklığın geçici bir dönem mi yoksa ilişkinin temel bağının zayıflaması mı olduğunu değerlendirmek önemli olabilir."},
+        {"h3": "4. Ayrılık Tehdidi Tartışmaların Parçası Haline Geldiyse"},
+        {"p": "“Boşanırım.” veya “O zaman bitsin.” gibi cümleler her tartışmada kullanılmaya başladığında ilişki güvenliği zedelenebilir."},
+        {"p": "Ayrılık fikri gerçekten düşünülüyorsa tehdit olarak kullanılmak yerine sakin bir ortamda değerlendirilmesi daha sağlıklıdır."},
+        {"h3": "5. Karar Vermekte Sürekli Gidip Geliyorsanız"},
+        {"p": "Bir gün ayrılmak isteyip ertesi gün devam etmek istemek, özellikle yoğun çatışmaların olduğu ilişkilerde görülebilir."},
+        {"p": "Danışmanlık, kişinin ne istediğini daha açık anlamasına ve kararını etkileyen korku, suçluluk, öfke veya beklentileri ayırmasına yardımcı olabilir."},
+        {"h": "Boşanma Kararını Netleştirmek İçin Hangi Sorular Sorulabilir?"},
+        {"li": "Bu ilişkide beni en çok tüketen şey nedir?"},
+        {"li": "Sorunlar değişirse ilişkiyi sürdürmek ister miyim?"},
+        {"li": "Partnerimin değişmesini mi bekliyorum, yoksa ilişkinin tamamından mı uzaklaştım?"},
+        {"li": "Bu kararı sakin olduğumda da aynı şekilde düşünüyor muyum?"},
+        {"li": "İlişkinin iyi çalışan tarafları hala var mı?"},
+        {"li": "Çift olarak daha önce çözebildiğimiz sorunlar oldu mu?"},
+        {"li": "İlişkiyi sürdürmek için iki taraf da gerçek bir çaba göstermeye hazır mı?"},
+        {"li": "Ayrılık düşüncem korkudan mı, öfkeden mi, yoksa uzun süredir devam eden bir değerlendirmeden mi geliyor?"},
+        {"li": "Ayrılma isteğim güven ve sevgi sorunlarından mı yoksa ilişkimiz heyecanını mı yitirdi?"},
+        {"li": "Çözüm hep tek taraflı çabaya mı bağlı? Ben olmasan ilişkimizin alçağı hal neye döner?"},
+        {"li": "Benzer hataları taşıyacak ve tekrarını kabul edecek gücüm var mı?"},
+        {"h": "Danışmanlıkta Kim Haklı Olduğuna Karar Verilir mi?"},
+        {"p": "Hayır."},
+        {"p": "Boşanma düşüncesi gündemdeyken taraflar çoğu zaman birbirini suçlamaya daha yatkın olabilir."},
+        {"p": "Danışmanlığın amacı kimin haklı olduğunu belirlemek değil, ilişkinin nasıl işlediğini ve çiftin hangi döngüler içinde kaldığını anlamaya yardımcı olmaktır."},
+        {"p": "Aile danışmanının önemli bir görevide yaşanan olayların çiftin her birinde nasıl cereyan ettiğinin çifte tercümesidir. Aynı olay çiftler tarafından çok farklı anlaşılabilir. Bu anlaşmazlığın anlaşılabilmesi duygu tercümesi adımından geçmektedir ve her seansın vazgeçilmezidir."},
+        {"h": "Bir Taraf Devam Etmek, Diğeri Ayrılmak İstiyorsa Ne Olur?"},
+        {"p": "Çiftlerin aynı noktada olması her zaman mümkün değildir."},
+        {"p": "Bir taraf ilişkiyi sürdürmek isterken diğer taraf ayrılığı düşünüyor olabilir."},
+        {"p": "Bu durumda danışmanlık, bir kişiyi kararından döndürmek için kullanılmamalıdır. Amaç iki tarafın kendi ihtiyaçlarını ve beklentilerini daha açık biçimde ifade edebilmesidir."},
+        {"p": "Alınacak karar çiftlerin sorumluluğundadır. Aile danışmanı taraflardan birini desteklemez aksine alınacak kararın sorumluluğunu onlara bırakır."},
+        {"h": "Eşim Danışmanlığa Gelmek İstemiyorsa Tek Başıma Başlayabilir miyim?"},
+        {"p": "Evet."},
+        {"p": "Eşiniz sürece katılmak istemese de kendi kararınızı, sınırlarınızı, ilişki içinde yaşadığınız zorlukları ve seçeneklerinizi değerlendirmek amacıyla bireysel görüşmeyle başlayabilirsiniz."},
+        {"p": "Tuğba Döngel’in çalışma kapsamında bireysel görüşmeler de yapılabilmektedir."},
+        {"h": "Ayrılık Kararı Verilirse Danışmanlık Yine Anlamlı Olabilir mi?"},
+        {"p": "Evet."},
+        {"p": "Danışmanlık yalnızca ilişkiyi sürdürmek için kullanılmaz."},
+        {"p": "Ayrılık kararı verilmişse iletişimi daha saygılı sürdürmek, sınırları netleştirmek ve ilişkinin kapanışını daha olgun biçimde yönetmek de önemli olabilir."},
+        {"p": "Ayrılık süreci, ortak bir hayatın sona ermesi nedeniyle kayıp ve yas duygularını da beraberinde getirebilir."},
+        {"p": "Ayrılık ve yas başlı başına bir danışmanlık sürecidir ve destek gerektirir."},
+        {"h": "Boşanma Öncesi Danışmanlık Ne Zaman Daha Anlamlı Olabilir?"},
+        {"li": "Çift ayrılık konusunda kararsızsa,"},
+        {"li": "Aynı sorunlar uzun süredir tekrar ediyorsa,"},
+        {"li": "İletişim tamamen tıkanmışsa,"},
+        {"li": "Güven sorunları yaşanıyorsa,"},
+        {"li": "Birliktelik hep tartışmalıysa,"},
+        {"li": "Taraflardan biri evlilik olgunluğuna erişemiyorsa,"},
+        {"li": "Ayrılık tehdidi sık sık kullanılıyorsa,"},
+        {"li": "Çift kararını öfke anlarında veriyorsa."},
+        {"h": "Hangi Durumlarda Öncelik Güvenlik Olmalıdır?"},
+        {"p": "Fiziksel şiddet, tehdit, cinsel zorlama, takip, korkutma veya kişinin güvenliğini riske atan kontrol davranışlarının bulunduğu durumlarda konu yalnızca çift iletişimi veya ilişki kararı olarak ele alınmamalıdır."},
+        {"p": "Bu durumlarda öncelik kişinin güvenliği ve uygun uzman veya acil destek kanallarına ulaşmasıdır."},
+        {"h": "Boşanma Kararı Bir Başarısızlık mıdır?"},
+        {"p": "Bir ilişkinin sona ermesi her zaman bir başarısızlık anlamına gelmez."},
+        {"p": "Bazen boşanmak bir başarıdır."},
+        {"p": "Bazı ilişkiler devam eder, bazıları ise belirli bir noktada sona erer."},
+        {"p": "Önemli olan kararın tehdit, cezalandırma veya öfke üzerinden değil; mümkün olduğunca açık, saygılı ve farkında bir yerden alınabilmesidir."},
+        {"h": "Çift Danışmanlığından Ne Beklememelisiniz?"},
+        {"li": "Danışmanın sizin yerinize boşanıp boşanmamanıza karar vermesini,"},
+        {"li": "Partnerinizi zorla değiştirmesini,"},
+        {"li": "Bir tarafı haklı ilan etmesini,"},
+        {"li": "Tek görüşmede yıllardır devam eden sorunların çözülmesini,"},
+        {"li": "Her evliliğin mutlaka devam ettirilmesini,"},
+        {"li": "Kanıtı olmayan bir sadakatsizliği ortaya çıkarması,"},
+        {"li": "Ders ve öğüt vermesi, nasihat etmesi."},
+        {"h": "Boşanmadan Önce Çift Danışmanlığı Fark Yaratabilir mi?"},
+        {"p": "Evet, bazı çiftler için fark yaratabilir."},
+        {"p": "Ancak bu fark her zaman evliliğin devam etmesi anlamına gelmez."},
+        {"p": "Bazen fark, ilişkiyi yeniden kurabilmek olur. Bazen de çiftin ayrılığın kendileri için daha doğru olduğunu daha net görmesi ve bu kararı daha az yıpratıcı biçimde yönetebilmesi olur."},
+        {"p": ["Tuğba Döngel ile ", {"a": "çift ve aile danışmanlığı", "href": "/yazilar/aile-danismanligi-nedir-kimler-basvurabilir"}, " süreci hakkında bilgi almak ve boşanma öncesi yaşadığınız karar sürecini değerlendirmek için görüşme planlayabilirsiniz."]},
+        {"h": "Sık Sorulan Sorular", "faqHeading": true}
+      ],
+      faq: [
+        {"q": "Boşanmadan önce çift danışmanlığı işe yarar mı?", "a": ["Çift danışmanlığı, boşanma öncesinde ilişki sorunlarını, tekrar eden döngüleri ve karar sürecini daha açık değerlendirmek için yararlı olabilir. Sonuç her zaman ilişkinin devam etmesi olmak zorunda değildir."]},
+        {"q": "Çift danışmanlığı boşanmayı engeller mi?", "a": ["Hayır. Danışmanlığın amacı boşanmayı engellemek veya çifti ilişkiyi sürdürmeye zorlamak değildir. Amaç daha bilinçli bir değerlendirme alanı sağlamaktır."]},
+        {"q": "Boşanmayı düşünen çiftler danışmanlığa gidebilir mi?", "a": ["Evet. Boşanma düşüncesi bulunan veya karar vermekte zorlanan çiftler de danışmanlık alabilir."]},
+        {"q": "Eşim boşanmak istiyor, yine de çift danışmanlığına gidebilir miyiz?", "a": ["Eşiniz görüşmeye katılmaya açıksa, ilişkinin ve kararların değerlendirilmesi amacıyla çift danışmanlığı düşünülebilir. Ancak danışmanlık kişiyi ayrılık kararından vazgeçirmeye zorlamak için kullanılmamalıdır."]},
+        {"q": "Eşim danışmanlığa gelmek istemiyorsa tek başıma gidebilir miyim?", "a": ["Evet. Kendi kararınızı, sınırlarınızı ve ilişki içinde yaşadığınız zorlukları değerlendirmek amacıyla bireysel görüşmeyle başlayabilirsiniz."]},
+        {"q": "Ayrılık kararı verildikten sonra danışmanlık alınabilir mi?", "a": ["Evet. Ayrılık sonrası iletişim, sınırlar, kayıp duygusu ve yeni yaşam düzenine uyum gibi konular bireysel danışmanlık kapsamında değerlendirilebilir."]}
       ] }
   ];
 
@@ -4241,7 +4355,7 @@ class Component extends DCLogic {
       { label: 'İletişim', page: 'contact' }
     ];
     const cats = ['Tümü'].concat(this.ARTICLES.map(a => a.cat).filter((c, i, arr) => arr.indexOf(c) === i));
-    const cover = (a, ratio, extra) => a.image ? React.createElement('img', { src: a.image, alt: a.title, style: Object.assign({ display: 'block', width: '100%', aspectRatio: ratio, objectFit: 'cover', background: '#E9D7DB' }, extra || {}) }) : null;
+    const cover = (a, ratio, extra) => a.image ? React.createElement('img', { src: a.image, alt: a.imageAlt || a.title, style: Object.assign({ display: 'block', width: '100%', aspectRatio: ratio, objectFit: 'cover', background: '#E9D7DB' }, extra || {}) }) : null;
     const embedded = (typeof window !== 'undefined' && window.ARTICLE_IMAGES) || {};
     // Rich text: a string, or an array of strings / { b: '...' } (bold) segments.
     // İç bağlantı: { a: 'metin', href: '/yazilar/slug' } — yazı içindeyse sayfa yenilenmeden açılır.
@@ -4256,15 +4370,15 @@ class Component extends DCLogic {
         : React.createElement('strong', { key: k, style: { fontWeight: 600, color: '#4B2330' } }, seg.b)))
       : v;
     const plain = (v) => Array.isArray(v) ? v.map((seg) => typeof seg === 'string' ? seg : (seg.b || seg.a)).join('') : (v || '');
-    const blockKinds = { isHeading: false, isNumHeading: false, isFaqHeading: false, isH3: false, isPara: false, isBullet: false, isQuote: false, isNote: false };
-    const bodyItems = (list) => (list || []).map((b) => b.h
+    const blockKinds = { isHeading: false, isNumHeading: false, isFaqHeading: false, isH3: false, isPara: false, isBullet: false, isQuote: false, isLeadQuote: false, isNote: false };
+    const bodyItems = (list) => (list || []).map((b, i) => b.h
       ? Object.assign({}, blockKinds, b.faqHeading ? { text: b.h, isFaqHeading: true } : /^\d+\.\s/.test(b.h) ? { text: b.h, isNumHeading: true } : { text: b.h, isHeading: true })
       : b.h3
       ? Object.assign({}, blockKinds, { text: b.h3, isH3: true })
       : b.li
       ? Object.assign({}, blockKinds, { text: Array.isArray(b.li) ? rich(['– '].concat(b.li)) : '– ' + b.li, isBullet: true })
       : b.q
-      ? Object.assign({}, blockKinds, { text: b.q, isQuote: true })
+      ? Object.assign({}, blockKinds, i === 0 ? { text: b.q, isLeadQuote: true } : { text: b.q, isQuote: true })
       : b.note
       ? Object.assign({}, blockKinds, { text: rich(b.note), isNote: true })
       : Object.assign({}, blockKinds, { text: rich(b.p), isPara: true }));
