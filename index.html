@@ -2935,9 +2935,6 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
         <sc-if value="{{ legal.hasClosing }}" hint-placeholder-val="{{ false }}">
           <p style="font:400 15.5px/1.8 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:32px 0 0; padding:20px; background:#FBF7F5; border:1px solid #EFD5DC; border-radius:8px">{{ legal.closing }}</p>
         </sc-if>
-        <sc-if value="{{ legal.showDraftNote }}" hint-placeholder-val="{{ true }}">
-          <p style="font:400 14px/1.7 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:24px 0 0">Bu sayfanın nihai metni, hukuki danışman onayıyla eklenecektir. [Yasal metinler — CLIENT TO CONFIRM]</p>
-        </sc-if>
       </div>
     </section>
   </main>
@@ -3103,10 +3100,10 @@ class Component extends DCLogic {
     { q: 'Online seanslar için hangi program kullanılıyor, teknik bir bilgi gerekiyor mu?', a: 'Seanslar görüntülü görüşme üzerinden yürütülür ve katılmak için özel bir teknik bilgiye ihtiyacınız yoktur; randevu sonrasında görüşme bilgileri tarafınıza iletilir.' },
     { q: 'Bir seans süresi ne kadardır?', a: 'Bireysel seans süreleri 60 dakika, çift katılımlı seanslar 90 dakikadır.' },
     { q: 'Seansların içeriği nedir?', a: 'Aile danışmanlığı ve verdiğim diğer tüm danışmanlık hizmetlerinde, ilk görüşme seansından sonra danışanın ihtiyacına yönelik yapılacak değerlendirme süreçleri ve çalışmalar hakkında danışana bilgi verilir.' },
-    { q: 'Görüşmeler ne sıklıkla yapılıyor?', a: 'Sıklık ihtiyaca göre belirlenir. Başlangıçta [Görüşme sıklığı — CLIENT TO CONFIRM] aralıkla ilerlemek yaygındır; süreç içinde bu aralık değişebilir.' },
+    { q: 'Görüşmeler ne sıklıkla yapılıyor?', a: 'Görüşme sıklığı ihtiyaca göre, randevu sırasında birlikte belirlenir; süreç içinde bu aralık değişebilir.' },
     { q: 'İlk seansta neler konuşuluyor?', a: 'Sizi başvurmaya yönlendiren durum, ilişkinin bugünkü işleyişi ve nasıl bir değişiklik beklediğiniz. İlk görüşme bir değerlendirme görüşmesidir; bu değerlendirmenin ardından sürecin nasıl ilerleyeceği hakkında size bilgi verilir.' },
     { q: 'Danışmanlığa başlamadan önce hazırlık yapmam gerekir mi?', a: 'Hayır, özel bir hazırlık yapmanıza gerek yok. Sürece açık olmanız ve yaşadıklarınızı paylaşmaya istekli olmanız yeterlidir; geri kalanını birlikte şekillendiriyoruz.' },
-    { q: 'Görüşmeler gizli mi?', a: 'Görüşmelerde paylaşılanlar meslek etiği ve ilgili mevzuat çerçevesinde gizli tutulur. Gizliliğin kapsamı ve istisnaları ilk görüşmede açıkça anlatılır. [Gizlilik metni — CLIENT TO CONFIRM]' },
+    { q: 'Görüşmeler gizli mi?', a: 'Görüşmelerde paylaşılanlar meslek etiği ve ilgili mevzuat çerçevesinde gizli tutulur. Gizliliğin kapsamı ve istisnaları ilk görüşmede açıkça anlatılır.' },
     { q: 'Kaç seansta tedavi biter?', a: 'Her birey ve her sorun için farklılık gösterir. Bazı konular birkaç görüşmede netleşir, uzun süredir yerleşmiş örüntüler daha fazla zaman ister. Belirli bir seans sayısı ya da sonuç garantisi vermiyorum.' },
     { q: 'Randevuyu nasıl oluşturabilirim?', a: 'İletişim sayfasındaki randevu bölümünden görüşme türünü ve size uygun gün/saati seçerek randevunuzu oluşturabilirsiniz.' }
   ];
@@ -4134,7 +4131,7 @@ class Component extends DCLogic {
     professionalTitle: 'Aile Danışmanı',
     email: 'tugba.dongelercan@mutluaileiliskileri.com',
     address: 'Site Mah. Diriliş Cad. Gürler Sok. No:28/3 Ümraniye/İSTANBUL',
-    hours: '[Çalışma saatleri — CLIENT TO CONFIRM]',
+    hours: 'Randevu takviminde belirtilen saatler',
     instagram: 'https://www.instagram.com/ailedanismanitugbadongel/',
     youtube: 'https://www.youtube.com/@ailedanismanitugbadongel',
     appointmentURL: '',
@@ -4538,8 +4535,7 @@ class Component extends DCLogic {
       notes: this.NOTES,
       cats: cats.map(c => ({ label: c, active: st.cat === c, inactive: st.cat !== c, go: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ cat: c }); } })),
       legal: Object.assign({}, this.LEGAL[st.legal] || this.LEGAL.kvkk, {
-        hasClosing: !!(this.LEGAL[st.legal] || this.LEGAL.kvkk).closing,
-        showDraftNote: st.legal !== 'onam'
+        hasClosing: !!(this.LEGAL[st.legal] || this.LEGAL.kvkk).closing
       }),
       site: this.SITE,
       contactRows: [
