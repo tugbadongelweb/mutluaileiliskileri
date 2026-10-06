@@ -3,16 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
+<!-- Analitik (Google Analytics + Microsoft Clarity) yalnızca ziyaretçi çerez
+     bandında "Kabul et" dediğinde yüklenir. Tercih localStorage['cookie_consent']
+     içinde 'granted' | 'denied' olarak saklanır. Onaydan önce gönderilen
+     gtag olayları dataLayer'da bekler; onay gelirse gönderilir, gelmezse hiç gönderilmez. -->
+<script>
+  window.loadAnalytics = function () {
+    if (window.__analyticsLoaded) return;
+    window.__analyticsLoaded = true;
+    // Google tag (gtag.js)
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtag/js?id=G-7ZZ28KL3T0';
+    document.head.appendChild(g);
+    // Microsoft Clarity
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "ytfsy0pz3z");
+  };
+  try { if (localStorage.getItem('cookie_consent') === 'granted') window.loadAnalytics(); } catch (e) {}
 </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7ZZ28KL3T0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -2976,6 +2988,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
           <a href="#" onClick="{{ goPrivacy }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Gizlilik Politikası</a>
           <a href="#" onClick="{{ goCookies }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Çerez Politikası</a>
           <a href="#" onClick="{{ goOnam }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Bilgilendirilmiş Onam Formu</a>
+          <a href="#" onClick="{{ openCookieSettings }}" style="font:400 12.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62" style-hover="color:#7D112E">Çerez Tercihleri</a>
         </nav>
       </div>
       <sc-if value="{{ showStickyCta }}" hint-placeholder-val="{{ false }}">
@@ -4072,7 +4085,7 @@ class Component extends DCLogic {
   LEGAL = {
     kvkk: { title: 'KVKK Aydınlatma Metni', intro: '6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında, web sitesi üzerinden iletilen bilgilerin hangi amaçla işlendiğini ve nasıl saklandığını bu sayfada açıklıyoruz.', items: ['Veri sorumlusu bilgileri — [CLIENT TO CONFIRM]', 'İşlenen veri kategorileri: ad soyad, e-posta, telefon, mesaj içeriği', 'İşleme amacı: randevu taleplerinin değerlendirilmesi ve iletişim', 'Saklama süresi ve ilgili kişi hakları — [CLIENT TO CONFIRM]'] },
     privacy: { title: 'Gizlilik Politikası', intro: 'Bu politika, web sitesi üzerinden toplanan bilgilerin nasıl kullanıldığını açıklar. Görüşmelerde paylaşılan bilgiler meslek etiği çerçevesinde ayrıca korunur.', items: ['Form üzerinden toplanan bilgiler ve kullanım amacı', 'Üçüncü taraf hizmet sağlayıcıları: Google Analytics ve Microsoft Clarity (site kullanım istatistikleri ve ziyaret analizi), PayTR (ödeme), Google Takvim (randevu planlama)', 'Veri güvenliği önlemleri', 'Talep ve başvuru yolları'] },
-    cookies: { title: 'Çerez Politikası', intro: 'Web sitesinde deneyimi geliştirmek ve trafik istatistiklerini ölçmek için çerezler kullanılabilir.', items: ['Zorunlu çerezler', 'Analitik çerezler: Google Analytics (ziyaret istatistikleri) ve Microsoft Clarity (sayfa içi tıklama, kaydırma ve gezinme davranışının anonim ısı haritaları ile oturum kayıtları). Form alanlarına yazılan bilgiler Clarity tarafından maskelenir ve kaydedilmez.', 'Çerez tercihlerinin yönetimi', 'Saklama süreleri'] },
+    cookies: { title: 'Çerez Politikası', intro: 'Web sitesinde deneyimi geliştirmek ve trafik istatistiklerini ölçmek için çerezler kullanılabilir.', items: ['Zorunlu çerezler', 'Analitik çerezler: Google Analytics (ziyaret istatistikleri) ve Microsoft Clarity (sayfa içi tıklama, kaydırma ve gezinme davranışının anonim ısı haritaları ile oturum kayıtları). Form alanlarına yazılan bilgiler Clarity tarafından maskelenir ve kaydedilmez.', 'Çerez tercihlerinin yönetimi: Analitik çerezler yalnızca çerez bandında onay vermeniz halinde çalışır. Tercihinizi istediğiniz zaman sayfanın altındaki "Çerez Tercihleri" bağlantısından değiştirebilirsiniz.', 'Saklama süreleri'] },
     onam: {
       title: 'Bilgilendirilmiş Onam Formu',
       intro: 'Aile danışmanlığı sürecinde sahip olduğunuz haklarınız ve sorumluluklarınız vardır. Bu form, süreçle ilgili sizi bilgilendirmek amacıyla hazırlanmıştır ve karşılıklı bir anlaşma niteliği taşır. Randevu almadan önce lütfen dikkatlice okuyunuz.',
@@ -4448,6 +4461,7 @@ class Component extends DCLogic {
       goPrivacy: this.go('legal', { legal: 'privacy' }),
       goCookies: this.go('legal', { legal: 'cookies' }),
       goOnam: this.go('legal', { legal: 'onam' }),
+      openCookieSettings: (e) => { if (e && e.preventDefault) e.preventDefault(); if (window.openCookieBanner) window.openCookieBanner(); },
 
       navItems: pages.map(p => { const cur = st.page === p.page || (st.page === 'service' && p.page === 'services') || (st.page === 'article' && p.page === 'writings'); return { label: p.label, go: this.go(p.page), active: cur, inactive: !cur }; }),
       trust: this.TRUST.map((t, i) => ({ label: t, sep: i < this.TRUST.length - 1 })),
@@ -4623,6 +4637,59 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<!-- Çerez onay bandı. Analitiği başlatan loadAnalytics() <head> içinde tanımlı.
+     Footer'daki "Çerez Tercihleri" linki window.openCookieBanner() ile bandı yeniden açar. -->
+<style>
+  #cookie-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:1000;max-width:520px;background:#FBF7F5;border:1px solid #EFD5DC;border-radius:10px;box-shadow:0 10px 32px rgba(75,35,48,.16);padding:20px 22px;font:400 14px/1.65 'Hanken Grotesk',sans-serif;color:#4B2330}
+  #cookie-banner[hidden]{display:none}
+  #cookie-banner p{margin:0}
+  #cookie-banner a{color:#7D112E;text-decoration:underline}
+  #cookie-banner .cb-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  #cookie-banner button{flex:1 1 120px;font:600 13.5px/1 'Hanken Grotesk',sans-serif;padding:13px 18px;border-radius:999px;cursor:pointer;border:1px solid #7D112E}
+  #cookie-banner .cb-accept{background:#7D112E;color:#fff}
+  #cookie-banner .cb-reject{background:transparent;color:#7D112E}
+  #cookie-banner button:focus-visible{outline:2px solid #7D112E;outline-offset:2px}
+</style>
+<div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Çerez tercihleri" hidden>
+  <p>Sitenin nasıl kullanıldığını anlamak için, onay vermeniz halinde Google Analytics ve Microsoft Clarity analitik çerezlerini kullanıyoruz. Zorunlu olmayan çerezler onayınız olmadan çalışmaz. Ayrıntılar için <a href="/cerez-politikasi">Çerez Politikası</a>.</p>
+  <div class="cb-actions">
+    <button type="button" class="cb-reject">Reddet</button>
+    <button type="button" class="cb-accept">Kabul et</button>
+  </div>
+</div>
+<script>
+(function () {
+  var el = document.getElementById('cookie-banner');
+  if (!el) return;
+  function save(v) { try { localStorage.setItem('cookie_consent', v); } catch (e) {} }
+  function stored() { try { return localStorage.getItem('cookie_consent'); } catch (e) { return null; } }
+  function clearAnalyticsCookies() {
+    var host = location.hostname.replace(/^www\./, '');
+    document.cookie.split(';').forEach(function (c) {
+      var name = c.split('=')[0].trim();
+      if (!/^(_ga|_gid|_gat|_clck|_clsk|CLID|MUID)/.test(name)) return;
+      ['', '; domain=' + host, '; domain=.' + host].forEach(function (d) {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/' + d;
+      });
+    });
+  }
+  el.querySelector('.cb-accept').addEventListener('click', function () {
+    save('granted');
+    el.hidden = true;
+    if (window.loadAnalytics) window.loadAnalytics();
+  });
+  el.querySelector('.cb-reject').addEventListener('click', function () {
+    var wasLoaded = !!window.__analyticsLoaded;
+    save('denied');
+    el.hidden = true;
+    clearAnalyticsCookies();
+    // Daha önce kabul edilip analitik yüklendiyse, durması için sayfayı yenile.
+    if (wasLoaded) location.reload();
+  });
+  window.openCookieBanner = function () { el.hidden = false; };
+  if (!stored()) el.hidden = false;
+})();
 </script>
 </body>
 </html>
