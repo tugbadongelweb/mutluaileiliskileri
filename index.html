@@ -2304,7 +2304,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
           <a href="#" onClick="{{ goWritings }}" style="display: inline-flex; align-items: center; gap: 9px; font: 500 13.5px/1 'Hanken Grotesk',sans-serif; color: #2A5A55; white-space: nowrap">Tüm Yazıları Görüntüle<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12.5 6 18.5 12l-6 6"></path></svg></a>
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)); gap:clamp(16px,1.9vw,26px); margin-top:clamp(30px,3.6vw,46px); align-items:stretch">
-          <sc-for list="{{ articles }}" as="a" hint-placeholder-count="2">
+          <sc-for list="{{ homeArticles }}" as="a" hint-placeholder-count="4">
             <article style="display:flex; flex-direction:column; background:#FFFFFF; border:1px solid #F3E1E5">
               <a href="#" onClick="{{ a.go }}" style="display:block">
                 {{ a.coverWide }}
@@ -2317,6 +2317,9 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
               </div>
             </article>
           </sc-for>
+        </div>
+        <div style="display:flex; justify-content:center; margin-top:clamp(28px,3.4vw,44px)">
+          <a href="/yazilar" onClick="{{ goWritings }}" style="display:inline-flex; align-items:center; gap:9px; font:600 14px/1 'Hanken Grotesk',sans-serif; color:#7D112E; background:transparent; border:1px solid #7D112E; padding:15px 28px; border-radius:8px; white-space:nowrap; transition:background 300ms ease, color 300ms ease" style-hover="background:#7D112E; color:#FFFFFF">Daha Fazla<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"></path><path d="M12.5 6 18.5 12l-6 6"></path></svg></a>
         </div>
       </div>
     </section>
@@ -4750,6 +4753,7 @@ class Component extends DCLogic {
       faqToggleLabel: st.faqAll ? 'Daha az göster' : 'Tüm sorular',
       toggleAllFaq: (ev) => { if (ev && ev.preventDefault) ev.preventDefault(); this.setState({ faqAll: !st.faqAll }); },
       articles: articles,
+      homeArticles: articles.slice(-4).reverse(),
       visibleArticles: st.cat === 'Tümü' ? articles : articles.filter(a => a.cat === st.cat),
       relatedArticles: articles.filter((a, i) => i !== st.art).slice(0, 3),
       art: articles[st.art] || articles[0],
