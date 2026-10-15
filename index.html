@@ -2720,7 +2720,7 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
             <p style="font:400 clamp(17px,1.35vw,18.5px)/1.72 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:16px 0 0; padding:14px 18px; background:#F8F1EC; border-left:2px solid #7D112E; border-radius:0 8px 8px 0; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
           <sc-if value="{{ p.isBullet }}" hint-placeholder-val="{{ false }}">
-            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:6px 0 0 8px; text-wrap:pretty">{{ p.text }}</p>
+            <p style="font:400 clamp(17px,1.35vw,18.5px)/1.65 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:6px 0 0 20px; text-wrap:pretty">{{ p.text }}</p>
           </sc-if>
           <sc-if value="{{ p.isPara }}" hint-placeholder-val="{{ true }}">
             <p style="font:400 clamp(17px,1.35vw,18.5px)/1.72 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:14px 0 0; text-wrap:pretty">{{ p.text }}</p>
@@ -5080,7 +5080,7 @@ class Component extends DCLogic {
       : b.h3
       ? Object.assign({}, blockKinds, { text: b.h3, isH3: true })
       : b.li
-      ? Object.assign({}, blockKinds, { text: Array.isArray(b.li) ? rich(['– '].concat(b.li)) : '– ' + b.li, isBullet: true })
+      ? Object.assign({}, blockKinds, { text: Array.isArray(b.li) ? rich(b.li) : b.li, isBullet: true })
       : b.q
       ? Object.assign({}, blockKinds, i === 0 ? { text: b.q, isLeadQuote: true } : { text: b.q, isQuote: true })
       : b.note
