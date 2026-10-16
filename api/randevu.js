@@ -153,7 +153,7 @@ export default async function handler(req, res) {
         record.paymentUrl = paymentUrl;
         record.priceTl = price;
         await saveBookingRecord(id, record);
-        res.status(200).json({ ok: true, id, paymentUrl });
+        res.status(200).json({ ok: true, id, paymentUrl, priceTl: price });
         return;
       } catch (e) {
         console.error('[randevu] PayTR token failed:', id, String(e && e.message || e));

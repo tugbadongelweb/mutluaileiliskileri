@@ -50,7 +50,13 @@
     var params = new URLSearchParams(window.location.search);
     var r = params.get('randevu');
     if (r !== 'odendi' && r !== 'basarisiz') return;
-    window.trackEvent(r === 'odendi' ? 'booking_paid' : 'booking_payment_failed');
+    // Ödemeye geçerken saklanan seans türü ve tutar (bkz. submitBooking).
+    var pending = {};
+    try { pending = JSON.parse(sessionStorage.getItem('pending_booking') || '{}') || {}; sessionStorage.removeItem('pending_booking'); } catch (e) {}
+    var p = {};
+    if (pending.session_type) p.session_type = pending.session_type;
+    if (r === 'odendi' && pending.value) { p.value = pending.value; p.currency = 'TRY'; if (pending.id) p.transaction_id = pending.id; }
+    window.trackEvent(r === 'odendi' ? 'booking_paid' : 'booking_payment_failed', p);
     // Sayfa yenilenince tekrar sayılmasın.
     params.delete('randevu');
     var qs = params.toString();
@@ -2896,7 +2902,11 @@ window.ARTICLE_IMAGES = {"images/yazi-evlilik-sorunlari.jpg":"data:image/jpeg;ba
                   <p style="font:500 14px/1.5 'Hanken Grotesk',sans-serif; color:#B3261E; margin:0">{{ bError }}</p>
                 </sc-if>
                 <button type="button" onClick="{{ submitBooking }}" disabled="{{ bSubmitting }}" style="font:600 15px/1 'Hanken Grotesk',sans-serif; color:#FFFFFF; background:#7D112E; border:none; padding:18px 26px; border-radius:8px; cursor:pointer; transition:background 350ms ease" style-hover="background:#4B2330">{{ submitLabel }}</button>
-                <p style="font:400 13px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">Devam ettiğinizde ödeme sayfasına yönlendirileceksiniz. Bu form acil durum hizmeti sağlamaz.</p>
+                <div style="display:flex; gap:12px; align-items:flex-start; background:#FBF3F5; border:1px solid #EFD5DC; border-radius:8px; padding:14px 16px">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7D112E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none; margin-top:2px"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+                  <p style="font:400 13.5px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0"><strong style="font-weight:600; color:#4B2330">Güvenli ödeme.</strong> Ödemeniz PayTR'ın güvenli ödeme sayfasında alınır; kart bilgileriniz bu siteye iletilmez ve saklanmaz. Seçtiğiniz saat, ödeme için 20 dakika boyunca sizin adınıza ayrılır. Ödeme tamamlandığında randevunuz kesinleşir ve Google Meet görüşme daveti e-postanıza gönderilir.</p>
+                </div>
+                <p style="font:400 13px/1.6 'Hanken Grotesk',sans-serif; color:#6D5E62; margin:0">Katılım, erteleme ve iptal koşulları <a href="#" onClick="{{ goOnam }}">Bilgilendirilmiş Onam Formu</a>'nda yer alır. Bu form acil durum hizmeti sağlamaz.</p>
               </div>
             </sc-if>
 
@@ -5031,6 +5041,8 @@ class Component extends DCLogic {
         throw new Error(data.error || 'unknown');
       }
       if (data.paymentUrl) {
+        // PayTR dönüşünde booking_paid etkinliğine tutar ve seans türü eklenebilsin diye.
+        try { sessionStorage.setItem('pending_booking', JSON.stringify({ id: data.id, session_type: st.bType, value: data.priceTl || null })); } catch (e) {}
         // Ödeme sayfasına geçmeden önce etkinliğin gönderilmesini bekle (en fazla 1,2 sn).
         let left = false;
         const leave = () => { if (!left) { left = true; window.location.href = data.paymentUrl; } };
